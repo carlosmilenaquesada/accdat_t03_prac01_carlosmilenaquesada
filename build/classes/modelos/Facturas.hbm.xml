@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 15-nov-2023 2:06:07 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="modelos.Facturas" table="FACTURAS" schema="ACCDAT_T03_PRAC01" optimistic-lock="version">
+        <id name="numfac" type="string">
+            <column name="NUMFAC" length="20" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="clientes" class="modelos.Clientes" fetch="select">
+            <column name="DNICLI" length="10" />
+        </many-to-one>
+        <property name="fecfact" type="date">
+            <column name="FECFACT" length="7" />
+        </property>
+        <set name="articuloses" table="ARTIFACT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="NUMFAC" length="20" not-null="true" />
+            </key>
+            <many-to-many entity-name="modelos.Articulos">
+                <column name="REFERART" length="20" not-null="true" />
+            </many-to-many>
+        </set>
+    </class>
+</hibernate-mapping>
