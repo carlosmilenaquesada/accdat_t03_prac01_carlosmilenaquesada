@@ -2,29 +2,12 @@ package vistas;
 
 import controladores.Crud;
 import java.awt.Rectangle;
-import java.util.ArrayList;
 import javax.swing.JDialog;
-import modelos.Familias;
 
 public class PrincipalJFrame extends javax.swing.JFrame {
     
     public PrincipalJFrame() {
         initComponents();
-        Crud crud = new Crud();
-        /*Familias familias1 = new Familias("F001", "SOMBREROS", null);
-        Familias familias2 = new Familias("F002", "ZAPATOS", null);
-        Familias familias3 = new Familias("F003", "PANTALONES", null);
-        Familias familias4 = new Familias("F004", "CAMISAS", null);
-        crud.create(familias1);
-        crud.create(familias2);
-        crud.create(familias3);
-        crud.create(familias4);*/
-        ArrayList<Familias> fam = new ArrayList<>(crud.readAll("from Familias"));
-        for (Familias f: fam) {
-            System.out.println(f);
-        }
-        
-        System.exit(0);
     }
 
     private Rectangle bondsDeDialogs(JDialog jDialog){

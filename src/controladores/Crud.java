@@ -1,6 +1,5 @@
 package controladores;
 
-
 import java.io.Serializable;
 import java.util.List;
 import org.hibernate.HibernateException;
@@ -61,30 +60,41 @@ public class Crud {
     /**
      * READ
      */
-    public void read(Class c, Serializable pk) {
+    public Object read(Class c, Serializable pk) {
+        Object o = null;
         try {
-            iniciarOperacion();
-            tx.commit();
+            ss = sf.openSession();
+            o = ss.get(c, pk);
         } catch (HibernateException e) {
-            tx.rollback();
+
         } finally {
             cerrarOperacion();
         }
+        return o;
     }
 
     /**
-     * READALL.
-     * Si la clase consultada en el "from" contiene una colección de otra 
-     * clase (set), dará excepción si el atributo del set "lazy" es true.
+     * Devuelve una colección {@code List} de todos los registros de la clase
+     * consultada.
+     * @param from indica la clase a consultar. Debe respetar
+     * el nombre exacto de la clase del modelo.
+     * @return 
+     * {@code null} - si la clase indicada en el {@code from} no existe.<br><br>
+     * {@code List size 0} - si la clase existe, pero no contiene registros.<br><br>
+     * {@code List size !0} - si la clase existe y contiene registros, crea un 
+     * List de los registros. Si la clase consultada en el {@code from} mapea una
+     * colección de otra clase (set), dará excepción al manipular los elementos
+     * de la colección, si el atributo {@code lazy} del set es {@code true}.
      */
     public List readAll(String from) {
         List coleccion = null;
         try {
-            iniciarOperacion();
+            ss = sf.openSession();
             coleccion = ss.createQuery(from).list();
-            tx.commit();
         } catch (HibernateException e) {
-            tx.rollback();
+            coleccion = null;
+        } catch (Exception e) {
+            coleccion = null;
         } finally {
             cerrarOperacion();
         }

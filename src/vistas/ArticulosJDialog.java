@@ -17,6 +17,7 @@ public class ArticulosJDialog extends javax.swing.JDialog {
     public ArticulosJDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        jTextFieldReferencia.setEditable(false);
     }
 
     /**
@@ -97,12 +98,12 @@ public class ArticulosJDialog extends javax.swing.JDialog {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 114, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButtonEliminar)
+                    .addComponent(jButtonCrear)
                     .addComponent(jButtonModificar)
-                    .addComponent(jButtonCrear))
-                .addGap(96, 96, 96))
+                    .addComponent(jButtonEliminar))
+                .addGap(165, 165, 165))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -130,11 +131,11 @@ public class ArticulosJDialog extends javax.swing.JDialog {
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(31, 31, 31)
-                        .addComponent(jButtonEliminar)
-                        .addGap(38, 38, 38)
+                        .addComponent(jButtonCrear)
+                        .addGap(18, 18, 18)
                         .addComponent(jButtonModificar)
-                        .addGap(52, 52, 52)
-                        .addComponent(jButtonCrear)))
+                        .addGap(18, 18, 18)
+                        .addComponent(jButtonEliminar)))
                 .addGap(52, 52, 52)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)

@@ -56,6 +56,7 @@ public class Familias  implements java.io.Serializable {
         return "Familias{" + "codfam=" + codfam + ", nomfam=" + nomfam + ", articuloses=" + articuloses + '}';
     }
     
+    
 
 
 }
