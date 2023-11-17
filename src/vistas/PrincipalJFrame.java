@@ -1,138 +1,155 @@
 package vistas;
 
-import controladores.Crud;
-import java.awt.Rectangle;
-import javax.swing.JDialog;
+import controladores.Herramientas;
 
 public class PrincipalJFrame extends javax.swing.JFrame {
-    
+
     public PrincipalJFrame() {
         initComponents();
     }
 
-    private Rectangle bondsDeDialogs(JDialog jDialog){
-        return new Rectangle(this.getX() + 20, this.getY() + 20, jDialog.getWidth(), jDialog.getHeight());
-    }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jButtonGestArt = new javax.swing.JButton();
-        jButtonGestClie = new javax.swing.JButton();
         jButtonGestFact = new javax.swing.JButton();
         jButtonGestFam = new javax.swing.JButton();
+        jToolBar1 = new javax.swing.JToolBar();
+        jButtonGestClie = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Gestión de ventas");
         setMinimumSize(new java.awt.Dimension(280, 240));
-        setPreferredSize(new java.awt.Dimension(280, 240));
         setResizable(false);
 
         jPanel1.setMinimumSize(new java.awt.Dimension(280, 240));
         jPanel1.setPreferredSize(new java.awt.Dimension(280, 240));
-        jPanel1.setLayout(null);
-
-        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jLabel1.setText("Articulos");
-        jPanel1.add(jLabel1);
-        jLabel1.setBounds(50, 20, 60, 25);
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel2.setText("Clientes");
-        jPanel1.add(jLabel2);
-        jLabel2.setBounds(50, 65, 60, 25);
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel3.setText("Facturas");
-        jPanel1.add(jLabel3);
-        jLabel3.setBounds(50, 110, 60, 25);
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel4.setText("Familias");
-        jPanel1.add(jLabel4);
-        jLabel4.setBounds(50, 155, 60, 25);
-
-        jButtonGestArt.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jButtonGestArt.setText("Gestionar");
-        jButtonGestArt.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonGestArtActionPerformed(evt);
-            }
-        });
-        jPanel1.add(jButtonGestArt);
-        jButtonGestArt.setBounds(130, 20, 100, 25);
-
-        jButtonGestClie.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jButtonGestClie.setText("Gestionar");
-        jButtonGestClie.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonGestClieActionPerformed(evt);
-            }
-        });
-        jPanel1.add(jButtonGestClie);
-        jButtonGestClie.setBounds(130, 65, 100, 25);
 
         jButtonGestFact.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jButtonGestFact.setText("Gestionar");
+        jButtonGestFact.setFocusable(false);
+        jButtonGestFact.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButtonGestFact.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jButtonGestFact.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonGestFactActionPerformed(evt);
             }
         });
-        jPanel1.add(jButtonGestFact);
-        jButtonGestFact.setBounds(130, 110, 100, 25);
 
         jButtonGestFam.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jButtonGestFam.setText("Gestionar");
+        jButtonGestFam.setFocusable(false);
+        jButtonGestFam.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButtonGestFam.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jButtonGestFam.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonGestFamActionPerformed(evt);
             }
         });
-        jPanel1.add(jButtonGestFam);
-        jButtonGestFam.setBounds(130, 155, 100, 25);
+
+        jToolBar1.setRollover(true);
+
+        jButtonGestClie.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jButtonGestClie.setText("Gestionar");
+        jButtonGestClie.setFocusable(false);
+        jButtonGestClie.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButtonGestClie.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButtonGestClie.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonGestClieActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(73, 73, 73)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButtonGestClie))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButtonGestFact))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButtonGestFam)))
+                .addContainerGap(299, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(34, 34, 34)
+                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jButtonGestClie))
+                        .addGap(20, 20, 20)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jButtonGestFact))
+                .addGap(20, 20, 20)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonGestFam))
+                .addGap(186, 186, 186))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 533, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 366, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButtonGestArtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGestArtActionPerformed
-        ArticulosJDialog articulosJDialog = new ArticulosJDialog(this, true);
-        articulosJDialog.setBounds(bondsDeDialogs(articulosJDialog));
-        articulosJDialog.setVisible(true);
-    }//GEN-LAST:event_jButtonGestArtActionPerformed
-
     private void jButtonGestClieActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGestClieActionPerformed
         ClientesJDialog clientesJDialog = new ClientesJDialog(this, true);
-        clientesJDialog.setBounds(bondsDeDialogs(clientesJDialog));
+        clientesJDialog.setBounds(Herramientas.bondsDeDialogs(this, clientesJDialog));
         clientesJDialog.setVisible(true);
     }//GEN-LAST:event_jButtonGestClieActionPerformed
 
     private void jButtonGestFactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGestFactActionPerformed
         FacturasJDialog facturasJDialog = new FacturasJDialog(this, true);
-        facturasJDialog.setBounds(bondsDeDialogs(facturasJDialog));
+        facturasJDialog.setBounds(Herramientas.bondsDeDialogs(this, facturasJDialog));
         facturasJDialog.setVisible(true);
     }//GEN-LAST:event_jButtonGestFactActionPerformed
 
     private void jButtonGestFamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGestFamActionPerformed
         FamiliasJDialog familiasJDialog = new FamiliasJDialog(this, true);
-         familiasJDialog.setBounds(bondsDeDialogs(familiasJDialog));
+        familiasJDialog.setBounds(Herramientas.bondsDeDialogs(this, familiasJDialog));
         familiasJDialog.setVisible(true);
     }//GEN-LAST:event_jButtonGestFamActionPerformed
 
@@ -169,14 +186,13 @@ public class PrincipalJFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButtonGestArt;
     private javax.swing.JButton jButtonGestClie;
     private javax.swing.JButton jButtonGestFact;
     private javax.swing.JButton jButtonGestFam;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JToolBar jToolBar1;
     // End of variables declaration//GEN-END:variables
 }

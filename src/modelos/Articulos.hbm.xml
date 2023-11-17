@@ -1,26 +1,27 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 15-nov-2023 2:06:07 by Hibernate Tools 4.3.1 -->
+<!-- Generated 17-nov-2023 1:38:33 by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="modelos.Articulos" table="ARTICULOS" schema="ACCDAT_T03_PRAC01" optimistic-lock="version">
-        <id name="referart" type="string">
-            <column name="REFERART" length="20" />
+        <id name="referenciaart" type="string">
+            <column name="REFERENCIAART" length="20" />
             <generator class="assigned" />
         </id>
         <many-to-one name="familias" class="modelos.Familias" fetch="select">
-            <column name="CODFAM" length="20" />
+            <column name="CODIGOFAM" length="20" />
         </many-to-one>
-        <property name="nomart" type="string">
-            <column name="NOMART" length="100" />
+        <property name="nombreart" type="string">
+            <column name="NOMBREART" length="100" />
         </property>
-        <set name="facturases" table="ARTIFACT" inverse="false" lazy="true" fetch="select">
+        <property name="impuestoart" type="string">
+            <column name="IMPUESTOART" length="100" />
+        </property>
+        <set name="artFacts" table="ART_FACT" inverse="true" lazy="true" fetch="select">
             <key>
-                <column name="REFERART" length="20" not-null="true" />
+                <column name="REFERENCIAART" length="20" not-null="true" />
             </key>
-            <many-to-many entity-name="modelos.Facturas">
-                <column name="NUMFAC" length="20" not-null="true" />
-            </many-to-many>
+            <one-to-many class="modelos.ArtFact" />
         </set>
     </class>
 </hibernate-mapping>

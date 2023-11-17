@@ -1,6 +1,10 @@
 package controladores;
 
+import java.awt.Component;
+import java.awt.Rectangle;
+import java.util.List;
 import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.table.DefaultTableModel;
 
 public class Herramientas {
@@ -21,6 +25,14 @@ public class Herramientas {
         for (JComponent jc : componentes) {
             jc.setEnabled(false);
         }
+    }
+
+    public static Rectangle bondsDeDialogs(Component padre, JDialog jDialog) {
+        return new Rectangle(padre.getX() + 10, padre.getY() + 10, jDialog.getWidth(), jDialog.getHeight());
+    }
+    
+    public static List actualizarList(Class c) {
+        return new Crud().readAll("from " + c.getName());
     }
 
 }

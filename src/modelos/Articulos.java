@@ -1,5 +1,5 @@
 package modelos;
-// Generated 15-nov-2023 2:06:07 by Hibernate Tools 4.3.1
+// Generated 17-nov-2023 1:38:32 by Hibernate Tools 4.3.1
 
 
 import java.util.HashSet;
@@ -11,31 +11,33 @@ import java.util.Set;
 public class Articulos  implements java.io.Serializable {
 
 
-     private String referart;
+     private String referenciaart;
      private Familias familias;
-     private String nomart;
-     private Set facturases = new HashSet(0);
+     private String nombreart;
+     private String impuestoart;
+     private Set artFacts = new HashSet(0);
 
     public Articulos() {
     }
 
 	
-    public Articulos(String referart) {
-        this.referart = referart;
+    public Articulos(String referenciaart) {
+        this.referenciaart = referenciaart;
     }
-    public Articulos(String referart, Familias familias, String nomart, Set facturases) {
-       this.referart = referart;
+    public Articulos(String referenciaart, Familias familias, String nombreart, String impuestoart, Set artFacts) {
+       this.referenciaart = referenciaart;
        this.familias = familias;
-       this.nomart = nomart;
-       this.facturases = facturases;
+       this.nombreart = nombreart;
+       this.impuestoart = impuestoart;
+       this.artFacts = artFacts;
     }
    
-    public String getReferart() {
-        return this.referart;
+    public String getReferenciaart() {
+        return this.referenciaart;
     }
     
-    public void setReferart(String referart) {
-        this.referart = referart;
+    public void setReferenciaart(String referenciaart) {
+        this.referenciaart = referenciaart;
     }
     public Familias getFamilias() {
         return this.familias;
@@ -44,19 +46,26 @@ public class Articulos  implements java.io.Serializable {
     public void setFamilias(Familias familias) {
         this.familias = familias;
     }
-    public String getNomart() {
-        return this.nomart;
+    public String getNombreart() {
+        return this.nombreart;
     }
     
-    public void setNomart(String nomart) {
-        this.nomart = nomart;
+    public void setNombreart(String nombreart) {
+        this.nombreart = nombreart;
     }
-    public Set getFacturases() {
-        return this.facturases;
+    public String getImpuestoart() {
+        return this.impuestoart;
     }
     
-    public void setFacturases(Set facturases) {
-        this.facturases = facturases;
+    public void setImpuestoart(String impuestoart) {
+        this.impuestoart = impuestoart;
+    }
+    public Set getArtFacts() {
+        return this.artFacts;
+    }
+    
+    public void setArtFacts(Set artFacts) {
+        this.artFacts = artFacts;
     }
 
 

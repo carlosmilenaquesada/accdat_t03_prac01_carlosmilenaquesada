@@ -1,5 +1,5 @@
 package modelos;
-// Generated 15-nov-2023 2:06:07 by Hibernate Tools 4.3.1
+// Generated 17-nov-2023 1:38:32 by Hibernate Tools 4.3.1
 
 
 import java.util.HashSet;
@@ -12,7 +12,9 @@ public class Clientes  implements java.io.Serializable {
 
 
      private String dnicli;
-     private String nomclien;
+     private String nombrecli;
+     private String domiciliocli;
+     private String telefonocli;
      private Set facturases = new HashSet(0);
 
     public Clientes() {
@@ -22,9 +24,11 @@ public class Clientes  implements java.io.Serializable {
     public Clientes(String dnicli) {
         this.dnicli = dnicli;
     }
-    public Clientes(String dnicli, String nomclien, Set facturases) {
+    public Clientes(String dnicli, String nombrecli, String domiciliocli, String telefonocli, Set facturases) {
        this.dnicli = dnicli;
-       this.nomclien = nomclien;
+       this.nombrecli = nombrecli;
+       this.domiciliocli = domiciliocli;
+       this.telefonocli = telefonocli;
        this.facturases = facturases;
     }
    
@@ -35,12 +39,26 @@ public class Clientes  implements java.io.Serializable {
     public void setDnicli(String dnicli) {
         this.dnicli = dnicli;
     }
-    public String getNomclien() {
-        return this.nomclien;
+    public String getNombrecli() {
+        return this.nombrecli;
     }
     
-    public void setNomclien(String nomclien) {
-        this.nomclien = nomclien;
+    public void setNombrecli(String nombrecli) {
+        this.nombrecli = nombrecli;
+    }
+    public String getDomiciliocli() {
+        return this.domiciliocli;
+    }
+    
+    public void setDomiciliocli(String domiciliocli) {
+        this.domiciliocli = domiciliocli;
+    }
+    public String getTelefonocli() {
+        return this.telefonocli;
+    }
+    
+    public void setTelefonocli(String telefonocli) {
+        this.telefonocli = telefonocli;
     }
     public Set getFacturases() {
         return this.facturases;

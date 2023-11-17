@@ -41,9 +41,9 @@ Contributor(s):
 -->
 <hibernate-reverse-engineering>
   <schema-selection match-schema="ACCDAT_T03_PRAC01"/>
-  <table-filter match-name="FACTURAS"/>
-  <table-filter match-name="CLIENTES"/>
-  <table-filter match-name="ARTIFACT"/>
   <table-filter match-name="ARTICULOS"/>
   <table-filter match-name="FAMILIAS"/>
+  <table-filter match-name="FACTURAS"/>
+  <table-filter match-name="ART_FACT"/>
+  <table-filter match-name="CLIENTES"/>
 </hibernate-reverse-engineering>
