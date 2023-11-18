@@ -14,7 +14,8 @@
         <property name="fechafactura" type="date">
             <column name="FECHAFACTURA" length="7" />
         </property>
-        <set name="articuloses" table="FACT_ART" inverse="false" lazy="true" fetch="select">
+        <!--<set name="articuloses" table="FACT_ART" inverse="false" lazy="true" fetch="select">-->
+        <set name="articuloses" table="FACT_ART" inverse="false" lazy="false" fetch="select">
             <key>
                 <column name="NUMFACTURA" precision="20" scale="0" not-null="true" />
             </key>

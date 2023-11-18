@@ -1,18 +1,53 @@
 package controladores;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.List;
+import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 public class Crud {
 
+    /*
+    
+    //Critera vs HQL
+SessionFactory sf = NewHibernateUtil.getSessionFactory();
+        Session ss = sf.openSession();
+        
+        //SON DOS FORMAS DE CONSULTAR LOS REGISTROS DE UNA TABLA, CON CONDICIONES, ORDEN, ETCL.
+        //ES DECIR, OBTENER UNA OLEECIÓN DE OBJTOS DE UNA TABLA. EL HQL TAMBIÉN PUEDE IMPLEMENTAR
+        //EL JOIN. EN CRITERIA LA CLASE OBTENIDA SIEMPRE ES UNA, EN HQL PODEMOS OBTNERE DIFERENTES
+        //CAMPOS DE CADA UNA DE LAS TABLAS DE UNA CONSULTA.
+        //Criteria  -> SELECT * FROM UnaTabla WHERE ... ORDER...
+        //HQL       -> SELECT * FROM UnaTabla WHERE ... ORDER...
+        //HQL       -> SELECT * FROM UnaTabla JOIN OtraTabla
+        //HQL teiene método prepareStatement, pero pepe no lo pide
+        try {
+            //ejemplo criteria.
+            Criteria c = ss.createCriteria(Clientes.class)//equivalente a select * from clientes.
+                    .addOrder(Order.asc("nombreclientes"));//restricciónes aplicadas al criteria (en este caso, un order)
+            List<Clientes> lista = c.list();
+            for (Clientes cli : lista) {
+                System.out.println(cli);
+            }
+
+            //ejemplo de HQL
+            Query q = ss.createQuery("from Clientes c order by c.nombreclientes");//equivalente a select * from clieentes order by nombre cliente (igual sentencia que la que hemos hecho el criteria).(no olvidar el alias)
+        } catch (HibernateException he) {
+            System.out.println(he.getMessage());
+        }
+
+        //LOS DELETE, INSERT y UPDATE SE HACEN DESDE EL SESSIÓN
+    }
+     */
     private SessionFactory sf = NewHibernateUtil.getSessionFactory();
     private Session ss = null;
     private Transaction tx = null;
+    private Query q = null;
+    private Criteria c = null;
 
     public Crud() {
     }
@@ -78,32 +113,37 @@ public class Crud {
     }
 
     /**
-     * Devuelve una colección {@code List} de todos los registros de la clase
-     * consultada.
-     *
-     * @param from indica la clase a consultar. Debe respetar el nombre exacto
-     * de la clase del modelo.
-     * @return {@code null} - si la clase indicada en el {@code from} no
-     * existe.<br><br> {@code List size 0} - si la clase existe, pero no
-     * contiene registros.<br><br> {@code List size !0} - si la clase existe y
-     * contiene registros, crea un List de los registros. Si la clase consultada
-     * en el {@code from} mapea una colección de otra clase (set), dará
-     * excepción al manipular los elementos de la colección, si el atributo
-     * {@code lazy} del set es {@code true}.
+     *READALL usando HQL Query
      */
-    public List readAll(String from) {
-        List coleccion = null;
+    public List readAllHQL(String from) {
+        List lista = null;//comporbar si devuelve null o vacío en caso de qeu no haya registros
         try {
             ss = sf.openSession();
-            coleccion = ss.createQuery(from).list();
+            q = ss.createQuery(from);
+            lista = q.list();
         } catch (HibernateException e) {
-            coleccion = null;
-        } catch (Exception e) {
-            coleccion = null;
+            
         } finally {
             cerrarOperacion();
         }
-        return coleccion;
+        return lista;
+    }
+    
+    /**
+     *READALL usando Criteria
+     */
+    public List readAllCriteria(Class clase) {
+        List lista = null;//comporbar si devuelve null o vacío en caso de qeu no haya registros
+        try {
+            ss = sf.openSession();
+            c = ss.createCriteria(clase);
+            lista = c.list();
+        } catch (HibernateException e) {
+            
+        } finally {
+            cerrarOperacion();
+        }
+        return lista;
     }
 
     /**
@@ -131,12 +171,12 @@ public class Crud {
             ss.delete(s);
             tx.commit();
         } catch (HibernateException e) {
-             error = e.getCause().getMessage();
+            error = e.getCause().getMessage();
             tx.rollback();
         } finally {
             cerrarOperacion();
         }
         return error;
-    }   
-    
+    }
+
 }

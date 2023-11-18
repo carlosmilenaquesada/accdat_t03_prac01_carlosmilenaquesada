@@ -64,9 +64,8 @@ public class FamiliasJDialog extends javax.swing.JDialog {
         jtfDescripcion.setText(familiaEnFoco.getDescfamilia());
     }
 
-
     private void actualizarTabla() {
-        listaFamilias = crud.readAll("from Familias f");
+        listaFamilias = crud.readAllHQL("from Familias f");
         Herramientas.limpiarTabla(dtmFamilias);
         for (Familias f : this.listaFamilias) {
             dtmFamilias.addRow(new Object[]{f.getCodfamilia(), f.getNomfamilia(), f.getDescfamilia(), f.getArticuloses().size()});
@@ -88,7 +87,7 @@ public class FamiliasJDialog extends javax.swing.JDialog {
         jbModificar = new javax.swing.JButton();
         jbBorrar = new javax.swing.JButton();
         jbGestionArticulos = new javax.swing.JButton();
-        jcPaneFamilias = new javax.swing.JScrollPane();
+        jspFamilias = new javax.swing.JScrollPane();
         jtFamilias = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -153,7 +152,7 @@ public class FamiliasJDialog extends javax.swing.JDialog {
         });
         jtFamilias.setColumnSelectionAllowed(true);
         jtFamilias.getTableHeader().setReorderingAllowed(false);
-        jcPaneFamilias.setViewportView(jtFamilias);
+        jspFamilias.setViewportView(jtFamilias);
         jtFamilias.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -171,7 +170,7 @@ public class FamiliasJDialog extends javax.swing.JDialog {
                         .addComponent(jbBorrar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jbGestionArticulos))
-                    .addComponent(jcPaneFamilias))
+                    .addComponent(jspFamilias))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jtfCodigo)
@@ -205,7 +204,7 @@ public class FamiliasJDialog extends javax.swing.JDialog {
                         .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jtfDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jcPaneFamilias, javax.swing.GroupLayout.PREFERRED_SIZE, 318, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jspFamilias, javax.swing.GroupLayout.PREFERRED_SIZE, 318, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jbCrear, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -318,7 +317,7 @@ public class FamiliasJDialog extends javax.swing.JDialog {
     private javax.swing.JButton jbCrear;
     private javax.swing.JButton jbGestionArticulos;
     private javax.swing.JButton jbModificar;
-    private javax.swing.JScrollPane jcPaneFamilias;
+    private javax.swing.JScrollPane jspFamilias;
     private javax.swing.JTable jtFamilias;
     private javax.swing.JTextField jtfCodigo;
     private javax.swing.JTextField jtfDescripcion;

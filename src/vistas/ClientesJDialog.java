@@ -50,7 +50,7 @@ public class ClientesJDialog extends javax.swing.JDialog {
 
 
     private void actualizarTabla() {
-        listaClientes = crud.readAll("from Clientes c");
+        listaClientes = crud.readAllHQL("from Clientes c");
         Herramientas.limpiarTabla(dtmClientes);
         for (Clientes c : this.listaClientes) {
             dtmClientes.addRow(new Object[]{c.getCodcliente(), c.getNomcliente(), c.getDomiciliocli(), c.getFacturases().size()});
@@ -71,7 +71,7 @@ public class ClientesJDialog extends javax.swing.JDialog {
         jbCrear = new javax.swing.JButton();
         jbModificar = new javax.swing.JButton();
         jbBorrar = new javax.swing.JButton();
-        jcPaneClientes = new javax.swing.JScrollPane();
+        jspClientes = new javax.swing.JScrollPane();
         jtClientes = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -129,7 +129,7 @@ public class ClientesJDialog extends javax.swing.JDialog {
         });
         jtClientes.setColumnSelectionAllowed(true);
         jtClientes.getTableHeader().setReorderingAllowed(false);
-        jcPaneClientes.setViewportView(jtClientes);
+        jspClientes.setViewportView(jtClientes);
         jtClientes.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -145,7 +145,7 @@ public class ClientesJDialog extends javax.swing.JDialog {
                         .addComponent(jbModificar)
                         .addGap(18, 18, 18)
                         .addComponent(jbBorrar))
-                    .addComponent(jcPaneClientes, javax.swing.GroupLayout.PREFERRED_SIZE, 526, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jspClientes, javax.swing.GroupLayout.PREFERRED_SIZE, 526, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jtfCodigo)
@@ -179,7 +179,7 @@ public class ClientesJDialog extends javax.swing.JDialog {
                         .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jtfDomicilio, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jcPaneClientes, javax.swing.GroupLayout.PREFERRED_SIZE, 318, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jspClientes, javax.swing.GroupLayout.PREFERRED_SIZE, 318, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jbCrear, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -284,7 +284,7 @@ public class ClientesJDialog extends javax.swing.JDialog {
     private javax.swing.JButton jbBorrar;
     private javax.swing.JButton jbCrear;
     private javax.swing.JButton jbModificar;
-    private javax.swing.JScrollPane jcPaneClientes;
+    private javax.swing.JScrollPane jspClientes;
     private javax.swing.JTable jtClientes;
     private javax.swing.JTextField jtfCodigo;
     private javax.swing.JTextField jtfDomicilio;

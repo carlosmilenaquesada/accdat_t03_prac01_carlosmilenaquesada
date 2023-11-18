@@ -54,7 +54,7 @@
                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       </Group>
                       <Group type="102" attributes="0">
-                          <Component id="jcpArticulos" pref="570" max="32767" attributes="0"/>
+                          <Component id="jspArticulos" pref="570" max="32767" attributes="0"/>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="jtfCodigo" alignment="0" min="-2" pref="100" max="-2" attributes="0"/>
@@ -89,7 +89,7 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="jtfPrecio" min="-2" pref="30" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="jcpArticulos" alignment="0" pref="0" max="32767" attributes="0"/>
+                      <Component id="jspArticulos" alignment="0" pref="0" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
@@ -148,7 +148,7 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbBorrarActionPerformed"/>
           </Events>
         </Component>
-        <Container class="javax.swing.JScrollPane" name="jcpArticulos">
+        <Container class="javax.swing.JScrollPane" name="jspArticulos">
           <AuxValues>
             <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
           </AuxValues>

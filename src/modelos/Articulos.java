@@ -3,6 +3,7 @@ package modelos;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -77,5 +78,32 @@ public class Articulos implements java.io.Serializable {
     public void setFacturases(Set facturases) {
         this.facturases = facturases;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 17 * hash + Objects.hashCode(this.codarticulo);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Articulos other = (Articulos) obj;
+        if (!Objects.equals(this.codarticulo, other.codarticulo)) {
+            return false;
+        }
+        return true;
+    }
+    
+    
 
 }

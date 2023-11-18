@@ -56,7 +56,7 @@ public class ArticulosJDialog extends javax.swing.JDialog {
             dtmArticulos.addRow(
                     new Object[]{a.getCodarticulo(),
                         a.getNomarticulo(),
-                        Herramientas.df.format(a.getPrecioarticulo()),
+                        Herramientas.dfPrecio.format(a.getPrecioarticulo()),
                         a.getFacturases().size()}
             );
         }
@@ -89,7 +89,7 @@ public class ArticulosJDialog extends javax.swing.JDialog {
         jbCrear = new javax.swing.JButton();
         jbModificar = new javax.swing.JButton();
         jbBorrar = new javax.swing.JButton();
-        jcpArticulos = new javax.swing.JScrollPane();
+        jspArticulos = new javax.swing.JScrollPane();
         jtArticulos = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -141,7 +141,7 @@ public class ArticulosJDialog extends javax.swing.JDialog {
         });
         jtArticulos.setColumnSelectionAllowed(true);
         jtArticulos.getTableHeader().setReorderingAllowed(false);
-        jcpArticulos.setViewportView(jtArticulos);
+        jspArticulos.setViewportView(jtArticulos);
         jtArticulos.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -159,7 +159,7 @@ public class ArticulosJDialog extends javax.swing.JDialog {
                         .addComponent(jbBorrar)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jcpArticulos, javax.swing.GroupLayout.DEFAULT_SIZE, 570, Short.MAX_VALUE)
+                        .addComponent(jspArticulos, javax.swing.GroupLayout.DEFAULT_SIZE, 570, Short.MAX_VALUE)
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jtfCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -188,7 +188,7 @@ public class ArticulosJDialog extends javax.swing.JDialog {
                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jtfPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jcpArticulos, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                    .addComponent(jspArticulos, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jbCrear, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -259,7 +259,7 @@ public class ArticulosJDialog extends javax.swing.JDialog {
                 JOptionPane.showMessageDialog(null, "El precio proporcionado no es válido.");
             }
         } else {
-            JOptionPane.showMessageDialog(null, "Debe seleccione o escriba un código de familia para iniciar la modificación.");
+            JOptionPane.showMessageDialog(null, "Proporcione un código de familia para iniciar la modificación.");
         }
     }//GEN-LAST:event_jbModificarActionPerformed
 
@@ -317,7 +317,7 @@ public class ArticulosJDialog extends javax.swing.JDialog {
     private javax.swing.JButton jbBorrar;
     private javax.swing.JButton jbCrear;
     private javax.swing.JButton jbModificar;
-    private javax.swing.JScrollPane jcpArticulos;
+    private javax.swing.JScrollPane jspArticulos;
     private javax.swing.JTable jtArticulos;
     private javax.swing.JTextField jtfCodigo;
     private javax.swing.JTextField jtfNombre;
