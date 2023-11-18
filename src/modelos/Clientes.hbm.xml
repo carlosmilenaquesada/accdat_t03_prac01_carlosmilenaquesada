@@ -14,7 +14,8 @@
         <property name="domiciliocli" type="string">
             <column name="DOMICILIOCLI" length="100" />
         </property>
-        <set name="facturases" table="FACTURAS" inverse="true" lazy="true" fetch="select">
+        <!--<set name="facturases" table="FACTURAS" inverse="true" lazy="true" fetch="select">-->
+        <set name="facturases" table="FACTURAS" inverse="true" lazy="false" fetch="select">
             <key>
                 <column name="CODCLIENTE" length="20" />
             </key>

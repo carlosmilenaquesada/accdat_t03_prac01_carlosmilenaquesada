@@ -19,7 +19,6 @@ public class FamiliasJDialog extends javax.swing.JDialog {
     private DefaultTableModel dtmFamilias;
     private List<Familias> listaFamilias;
     private Familias familiaEnFoco;
-
     private int rowSeleccionada;
 
     public FamiliasJDialog(java.awt.Frame parent, boolean modal) {
@@ -34,9 +33,8 @@ public class FamiliasJDialog extends javax.swing.JDialog {
         this.jtFamilias.setCellSelectionEnabled(false);
         this.jtFamilias.setRowSelectionAllowed(true);
         this.familiaEnFoco = null;
-        this.listaFamilias = crud.readAll("from Familias f");
-        rellenarTablaFamilias();
-        this.rowSeleccionada = -1;
+        actualizarTabla();
+        this.rowSeleccionada = jtFamilias.getSelectedRow();
 
         this.jtFamilias.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
@@ -66,16 +64,13 @@ public class FamiliasJDialog extends javax.swing.JDialog {
         jtfDescripcion.setText(familiaEnFoco.getDescfamilia());
     }
 
-    private void rellenarTablaFamilias() {
-        for (Familias f : this.listaFamilias) {
-            dtmFamilias.addRow(new Object[]{f.getCodfamilia(), f.getNomfamilia(), f.getDescfamilia(), f.getArticuloses().size()});
-        }
-    }
 
     private void actualizarTabla() {
         listaFamilias = crud.readAll("from Familias f");
         Herramientas.limpiarTabla(dtmFamilias);
-        rellenarTablaFamilias();
+        for (Familias f : this.listaFamilias) {
+            dtmFamilias.addRow(new Object[]{f.getCodfamilia(), f.getNomfamilia(), f.getDescfamilia(), f.getArticuloses().size()});
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -145,7 +140,7 @@ public class FamiliasJDialog extends javax.swing.JDialog {
 
             },
             new String [] {
-                "Código", "Nombre", "Descripción", "Cantidad artículos"
+                "Código", "Nombre", "Descripción", "Artículos asociados"
             }
         ) {
             boolean[] canEdit = new boolean [] {
