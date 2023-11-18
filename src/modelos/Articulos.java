@@ -1,7 +1,8 @@
 package modelos;
-// Generated 17-nov-2023 1:38:32 by Hibernate Tools 4.3.1
+// Generated 18-nov-2023 1:53:26 by Hibernate Tools 4.3.1
 
 
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -11,33 +12,33 @@ import java.util.Set;
 public class Articulos  implements java.io.Serializable {
 
 
-     private String referenciaart;
+     private String codarticulo;
      private Familias familias;
-     private String nombreart;
-     private String impuestoart;
-     private Set artFacts = new HashSet(0);
+     private String nomarticulo;
+     private BigDecimal precioarticulo;
+     private Set facturases = new HashSet(0);
 
     public Articulos() {
     }
 
 	
-    public Articulos(String referenciaart) {
-        this.referenciaart = referenciaart;
+    public Articulos(String codarticulo) {
+        this.codarticulo = codarticulo;
     }
-    public Articulos(String referenciaart, Familias familias, String nombreart, String impuestoart, Set artFacts) {
-       this.referenciaart = referenciaart;
+    public Articulos(String codarticulo, Familias familias, String nomarticulo, BigDecimal precioarticulo, Set facturases) {
+       this.codarticulo = codarticulo;
        this.familias = familias;
-       this.nombreart = nombreart;
-       this.impuestoart = impuestoart;
-       this.artFacts = artFacts;
+       this.nomarticulo = nomarticulo;
+       this.precioarticulo = precioarticulo;
+       this.facturases = facturases;
     }
    
-    public String getReferenciaart() {
-        return this.referenciaart;
+    public String getCodarticulo() {
+        return this.codarticulo;
     }
     
-    public void setReferenciaart(String referenciaart) {
-        this.referenciaart = referenciaart;
+    public void setCodarticulo(String codarticulo) {
+        this.codarticulo = codarticulo;
     }
     public Familias getFamilias() {
         return this.familias;
@@ -46,26 +47,26 @@ public class Articulos  implements java.io.Serializable {
     public void setFamilias(Familias familias) {
         this.familias = familias;
     }
-    public String getNombreart() {
-        return this.nombreart;
+    public String getNomarticulo() {
+        return this.nomarticulo;
     }
     
-    public void setNombreart(String nombreart) {
-        this.nombreart = nombreart;
+    public void setNomarticulo(String nomarticulo) {
+        this.nomarticulo = nomarticulo;
     }
-    public String getImpuestoart() {
-        return this.impuestoart;
-    }
-    
-    public void setImpuestoart(String impuestoart) {
-        this.impuestoart = impuestoart;
-    }
-    public Set getArtFacts() {
-        return this.artFacts;
+    public BigDecimal getPrecioarticulo() {
+        return this.precioarticulo;
     }
     
-    public void setArtFacts(Set artFacts) {
-        this.artFacts = artFacts;
+    public void setPrecioarticulo(BigDecimal precioarticulo) {
+        this.precioarticulo = precioarticulo;
+    }
+    public Set getFacturases() {
+        return this.facturases;
+    }
+    
+    public void setFacturases(Set facturases) {
+        this.facturases = facturases;
     }
 
 

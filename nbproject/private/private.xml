@@ -3,13 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/G:/Mi%20unidad/GRADOSUPERIOR/SEGUNDO/AD/TEMA3/TRABAJOS/accdat_t03_prac01_carlosmilenaquesada/src/modelos/ArtFactId.java</file>
-            <file>file:/G:/Mi%20unidad/GRADOSUPERIOR/SEGUNDO/AD/TEMA3/TRABAJOS/accdat_t03_prac01_carlosmilenaquesada/src/vistas/FamiliasJDialog.java</file>
-            <file>file:/G:/Mi%20unidad/GRADOSUPERIOR/SEGUNDO/AD/TEMA3/TRABAJOS/accdat_t03_prac01_carlosmilenaquesada/src/modelos/ArtFact.java</file>
-            <file>file:/G:/Mi%20unidad/GRADOSUPERIOR/SEGUNDO/AD/TEMA3/TRABAJOS/accdat_t03_prac01_carlosmilenaquesada/src/vistas/PrincipalJFrame.java</file>
-            <file>file:/G:/Mi%20unidad/GRADOSUPERIOR/SEGUNDO/AD/TEMA3/TRABAJOS/accdat_t03_prac01_carlosmilenaquesada/src/vistas/FacturasJDialog.java</file>
-            <file>file:/G:/Mi%20unidad/GRADOSUPERIOR/SEGUNDO/AD/TEMA3/TRABAJOS/accdat_t03_prac01_carlosmilenaquesada/src/vistas/ArticulosJDialog.java</file>
-            <file>file:/G:/Mi%20unidad/GRADOSUPERIOR/SEGUNDO/AD/TEMA3/TRABAJOS/accdat_t03_prac01_carlosmilenaquesada/src/vistas/ClientesJDialog.java</file>
+            <file>file:/G:/Mi%20unidad/GRADOSUPERIOR/SEGUNDO/AD/TEMA3/TRABAJOS/accdat_t03_prac01_carlosmilenaquesada/src/hibernate.reveng.xml</file>
+            <file>file:/G:/Mi%20unidad/GRADOSUPERIOR/SEGUNDO/AD/TEMA3/TRABAJOS/accdat_t03_prac01_carlosmilenaquesada/src/hibernate.cfg.xml</file>
+            <file>file:/G:/Mi%20unidad/GRADOSUPERIOR/SEGUNDO/AD/TEMA3/TRABAJOS/accdat_t03_prac01_carlosmilenaquesada/src/controladores/NewHibernateUtil.java</file>
         </group>
     </open-files>
 </project-private>

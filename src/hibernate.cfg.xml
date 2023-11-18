@@ -47,7 +47,6 @@ Contributor(s):
     <property name="hibernate.connection.username">ACCDAT_T03_PRAC01</property>
     <property name="hibernate.connection.password">ACCDAT_T03_PRAC01</property>
     <mapping resource="modelos/Clientes.hbm.xml"/>
-    <mapping resource="modelos/ArtFact.hbm.xml"/>
     <mapping resource="modelos/Facturas.hbm.xml"/>
     <mapping resource="modelos/Familias.hbm.xml"/>
     <mapping resource="modelos/Articulos.hbm.xml"/>

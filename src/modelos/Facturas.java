@@ -1,7 +1,8 @@
 package modelos;
-// Generated 17-nov-2023 1:38:32 by Hibernate Tools 4.3.1
+// Generated 18-nov-2023 1:53:26 by Hibernate Tools 4.3.1
 
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -12,33 +13,31 @@ import java.util.Set;
 public class Facturas  implements java.io.Serializable {
 
 
-     private String numerofact;
+     private BigDecimal numfactura;
      private Clientes clientes;
-     private Date fechafact;
-     private String estadofact;
-     private Set artFacts = new HashSet(0);
+     private Date fechafactura;
+     private Set articuloses = new HashSet(0);
 
     public Facturas() {
     }
 
 	
-    public Facturas(String numerofact) {
-        this.numerofact = numerofact;
+    public Facturas(BigDecimal numfactura) {
+        this.numfactura = numfactura;
     }
-    public Facturas(String numerofact, Clientes clientes, Date fechafact, String estadofact, Set artFacts) {
-       this.numerofact = numerofact;
+    public Facturas(BigDecimal numfactura, Clientes clientes, Date fechafactura, Set articuloses) {
+       this.numfactura = numfactura;
        this.clientes = clientes;
-       this.fechafact = fechafact;
-       this.estadofact = estadofact;
-       this.artFacts = artFacts;
+       this.fechafactura = fechafactura;
+       this.articuloses = articuloses;
     }
    
-    public String getNumerofact() {
-        return this.numerofact;
+    public BigDecimal getNumfactura() {
+        return this.numfactura;
     }
     
-    public void setNumerofact(String numerofact) {
-        this.numerofact = numerofact;
+    public void setNumfactura(BigDecimal numfactura) {
+        this.numfactura = numfactura;
     }
     public Clientes getClientes() {
         return this.clientes;
@@ -47,26 +46,19 @@ public class Facturas  implements java.io.Serializable {
     public void setClientes(Clientes clientes) {
         this.clientes = clientes;
     }
-    public Date getFechafact() {
-        return this.fechafact;
+    public Date getFechafactura() {
+        return this.fechafactura;
     }
     
-    public void setFechafact(Date fechafact) {
-        this.fechafact = fechafact;
+    public void setFechafactura(Date fechafactura) {
+        this.fechafactura = fechafactura;
     }
-    public String getEstadofact() {
-        return this.estadofact;
-    }
-    
-    public void setEstadofact(String estadofact) {
-        this.estadofact = estadofact;
-    }
-    public Set getArtFacts() {
-        return this.artFacts;
+    public Set getArticuloses() {
+        return this.articuloses;
     }
     
-    public void setArtFacts(Set artFacts) {
-        this.artFacts = artFacts;
+    public void setArticuloses(Set articuloses) {
+        this.articuloses = articuloses;
     }
 
 

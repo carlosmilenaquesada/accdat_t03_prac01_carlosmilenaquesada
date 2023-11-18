@@ -1,5 +1,5 @@
 package modelos;
-// Generated 17-nov-2023 1:38:32 by Hibernate Tools 4.3.1
+// Generated 18-nov-2023 1:53:26 by Hibernate Tools 4.3.1
 
 
 import java.util.HashSet;
@@ -11,40 +11,38 @@ import java.util.Set;
 public class Clientes  implements java.io.Serializable {
 
 
-     private String dnicli;
-     private String nombrecli;
+     private String codcliente;
+     private String nomcliente;
      private String domiciliocli;
-     private String telefonocli;
      private Set facturases = new HashSet(0);
 
     public Clientes() {
     }
 
 	
-    public Clientes(String dnicli) {
-        this.dnicli = dnicli;
+    public Clientes(String codcliente) {
+        this.codcliente = codcliente;
     }
-    public Clientes(String dnicli, String nombrecli, String domiciliocli, String telefonocli, Set facturases) {
-       this.dnicli = dnicli;
-       this.nombrecli = nombrecli;
+    public Clientes(String codcliente, String nomcliente, String domiciliocli, Set facturases) {
+       this.codcliente = codcliente;
+       this.nomcliente = nomcliente;
        this.domiciliocli = domiciliocli;
-       this.telefonocli = telefonocli;
        this.facturases = facturases;
     }
    
-    public String getDnicli() {
-        return this.dnicli;
+    public String getCodcliente() {
+        return this.codcliente;
     }
     
-    public void setDnicli(String dnicli) {
-        this.dnicli = dnicli;
+    public void setCodcliente(String codcliente) {
+        this.codcliente = codcliente;
     }
-    public String getNombrecli() {
-        return this.nombrecli;
+    public String getNomcliente() {
+        return this.nomcliente;
     }
     
-    public void setNombrecli(String nombrecli) {
-        this.nombrecli = nombrecli;
+    public void setNomcliente(String nomcliente) {
+        this.nomcliente = nomcliente;
     }
     public String getDomiciliocli() {
         return this.domiciliocli;
@@ -52,13 +50,6 @@ public class Clientes  implements java.io.Serializable {
     
     public void setDomiciliocli(String domiciliocli) {
         this.domiciliocli = domiciliocli;
-    }
-    public String getTelefonocli() {
-        return this.telefonocli;
-    }
-    
-    public void setTelefonocli(String telefonocli) {
-        this.telefonocli = telefonocli;
     }
     public Set getFacturases() {
         return this.facturases;
