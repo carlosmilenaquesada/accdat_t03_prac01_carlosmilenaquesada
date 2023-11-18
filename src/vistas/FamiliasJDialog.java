@@ -3,6 +3,7 @@ package vistas;
 import controladores.Crud;
 import controladores.Herramientas;
 import java.awt.Frame;
+import java.util.HashSet;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
@@ -17,10 +18,9 @@ public class FamiliasJDialog extends javax.swing.JDialog {
 
     private DefaultTableModel dtmFamilias;
     private List<Familias> listaFamilias;
-
-    private int[] rowsSeleccionadas;
-    private int ultimaRowMarcada;
     private Familias familiaEnFoco;
+
+    private int rowSeleccionada;
 
     public FamiliasJDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -33,40 +33,47 @@ public class FamiliasJDialog extends javax.swing.JDialog {
         this.dtmFamilias = (DefaultTableModel) jTableFamilias.getModel();
         this.jTableFamilias.setCellSelectionEnabled(false);
         this.jTableFamilias.setRowSelectionAllowed(true);
-
-        this.listaFamilias = Herramientas.actualizarList(Familias.class);
+        this.familiaEnFoco = null;
+        this.listaFamilias = crud.readAll("from Familias f");
         rellenarTablaFamilias();
-        ultimaRowMarcada = -1;
+        this.rowSeleccionada = -1;
 
         this.jTableFamilias.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 if (e.getValueIsAdjusting()) {
-                    rowsSeleccionadas = jTableFamilias.getSelectedRows();
-                    ultimaRowMarcada = jTableFamilias.getSelectionModel().getLeadSelectionIndex();
-                    familiaEnFoco = listaFamilias.get(listaFamilias.indexOf(new Familias((String) jTableFamilias.getValueAt(ultimaRowMarcada, 0))));
-                    actualizarInputsTexto(ultimaRowMarcada);
+                    rowSeleccionada = jTableFamilias.getSelectedRow();
+                    Object pkRowSeleccionada = jTableFamilias.getValueAt(rowSeleccionada, 0);
+                    familiaEnFoco = listaFamilias.get(listaFamilias.indexOf(new Familias((String) pkRowSeleccionada)));
+                    //Cada vez que selecciono una fila en la tabla Familias,
+                    //necesito capturar el objeto Familias seleccionado para poder
+                    //editarlo, borrarlo o mostrar sus artículos. Para ello,
+                    //me ayudo del listaFamilias.get y listaFamilias.indexOf 
+                    //proporcionándoles un new Familias con la pk de la familia
+                    //marcada, ya que estos métodos utilizan el equals de la clase
+                    //para identificar un elemento dentro de una List, y yo lo 
+                    //tengo sobrecargado para que sea el "codFamilia" lo que 
+                    //determine la igualdad.
+                    actualizarInputsTexto(familiaEnFoco);
                 }
             }
         });
     }
 
-    private void actualizarInputsTexto(int rowEnFoco) {
-        jTextFieldCodigo.setText((String) jTableFamilias.getValueAt(rowEnFoco, 0));
-        jTextFieldNombre.setText((String) jTableFamilias.getValueAt(rowEnFoco, 1));
-        jTextFieldDescripcion.setText((String) jTableFamilias.getValueAt(rowEnFoco, 2));
-        jTextFieldCategoria.setText((String) jTableFamilias.getValueAt(rowEnFoco, 3));
+    private void actualizarInputsTexto(Familias familiaEnFoco) {
+        jTextFieldCodigo.setText(familiaEnFoco.getCodfamilia());
+        jTextFieldNombre.setText(familiaEnFoco.getNomfamilia());
+        jTextFieldDescripcion.setText(familiaEnFoco.getDescfamilia());
     }
 
-
     private void rellenarTablaFamilias() {
-        for (Familias f : listaFamilias) {
-            dtmFamilias.addRow(new Object[]{f.getCodigofam(), f.getNombrefam(), f.getDescripcionfam(), f.getCategoriafam(), f.getArticuloses().size()});
+        for (Familias f : this.listaFamilias) {
+            dtmFamilias.addRow(new Object[]{f.getCodfamilia(), f.getNomfamilia(), f.getDescfamilia(), f.getArticuloses().size()});
         }
     }
 
     private void actualizarTabla() {
-        listaFamilias = Herramientas.actualizarList(Familias.class);
+        listaFamilias = crud.readAll("from Familias f");
         Herramientas.limpiarTabla(dtmFamilias);
         rellenarTablaFamilias();
     }
@@ -82,13 +89,12 @@ public class FamiliasJDialog extends javax.swing.JDialog {
         jTextFieldNombre = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jTextFieldDescripcion = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
-        jTextFieldCategoria = new javax.swing.JTextField();
         jButtonCrear = new javax.swing.JButton();
         jButtonModificar = new javax.swing.JButton();
+        jButtonGestionArticulos = new javax.swing.JButton();
+        jButtonActualizarTabla = new javax.swing.JButton();
         jScrollPaneFamilias = new javax.swing.JScrollPane();
         jTableFamilias = new javax.swing.JTable();
-        jButtonGestionArticulos = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Gestión de familias");
@@ -106,8 +112,6 @@ public class FamiliasJDialog extends javax.swing.JDialog {
 
         jLabel3.setText("Descripción");
 
-        jLabel4.setText("Categoría");
-
         jButtonCrear.setText("Crear familia");
         jButtonCrear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -122,16 +126,30 @@ public class FamiliasJDialog extends javax.swing.JDialog {
             }
         });
 
+        jButtonGestionArticulos.setText("Gestionar artículos de la familia");
+        jButtonGestionArticulos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonGestionArticulosActionPerformed(evt);
+            }
+        });
+
+        jButtonActualizarTabla.setText("Actualizar tabla");
+        jButtonActualizarTabla.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonActualizarTablaActionPerformed(evt);
+            }
+        });
+
         jTableFamilias.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Código", "Nombre", "Descripción", "Categoría", "Cantidad artículos"
+                "Código", "Nombre", "Descripción", "Cantidad artículos"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -141,21 +159,7 @@ public class FamiliasJDialog extends javax.swing.JDialog {
         jTableFamilias.setColumnSelectionAllowed(true);
         jTableFamilias.getTableHeader().setReorderingAllowed(false);
         jScrollPaneFamilias.setViewportView(jTableFamilias);
-        jTableFamilias.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        if (jTableFamilias.getColumnModel().getColumnCount() > 0) {
-            jTableFamilias.getColumnModel().getColumn(0).setResizable(false);
-            jTableFamilias.getColumnModel().getColumn(1).setResizable(false);
-            jTableFamilias.getColumnModel().getColumn(2).setResizable(false);
-            jTableFamilias.getColumnModel().getColumn(3).setResizable(false);
-            jTableFamilias.getColumnModel().getColumn(4).setResizable(false);
-        }
-
-        jButtonGestionArticulos.setText("Gestionar artículos de la familia");
-        jButtonGestionArticulos.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonGestionArticulosActionPerformed(evt);
-            }
-        });
+        jTableFamilias.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -173,19 +177,18 @@ public class FamiliasJDialog extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButtonGestionArticulos))
                     .addComponent(jScrollPaneFamilias))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jTextFieldCodigo)
+                    .addComponent(jTextFieldNombre)
+                    .addComponent(jTextFieldDescripcion)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
                             .addComponent(jLabel2)
                             .addComponent(jLabel3)
-                            .addComponent(jLabel4))
-                        .addGap(0, 162, Short.MAX_VALUE))
-                    .addComponent(jTextFieldNombre)
-                    .addComponent(jTextFieldDescripcion)
-                    .addComponent(jTextFieldCategoria))
+                            .addComponent(jButtonActualizarTabla))
+                        .addGap(0, 117, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -194,6 +197,8 @@ public class FamiliasJDialog extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButtonActualizarTabla, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jTextFieldCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -204,12 +209,8 @@ public class FamiliasJDialog extends javax.swing.JDialog {
                         .addGap(18, 18, 18)
                         .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextFieldDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextFieldCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPaneFamilias, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                        .addComponent(jTextFieldDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPaneFamilias, javax.swing.GroupLayout.PREFERRED_SIZE, 318, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonCrear, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -224,10 +225,14 @@ public class FamiliasJDialog extends javax.swing.JDialog {
 
     private void jButtonCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCrearActionPerformed
         if (!jTextFieldCodigo.getText().isEmpty()) {
-            jTableFamilias.clearSelection();
-            Familias familias = new Familias(jTextFieldCodigo.getText(), jTextFieldNombre.getText(), jTextFieldDescripcion.getText(), jTextFieldCategoria.getText(), null);
-            crud.create(familias);
-            actualizarTabla();
+            Familias familias = new Familias(jTextFieldCodigo.getText(), jTextFieldNombre.getText(), jTextFieldDescripcion.getText(), null);
+            String error = crud.create(familias);
+            if (!error.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "No se pudo completar la operación."
+                        + "\nDescripción del error: " + error);
+            } else {
+                actualizarTabla();
+            }
         } else {
             JOptionPane.showMessageDialog(null, "Debe proporcionar un código de familia válido.");
         }
@@ -235,23 +240,15 @@ public class FamiliasJDialog extends javax.swing.JDialog {
 
     private void jButtonModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonModificarActionPerformed
         if (!jTextFieldCodigo.getText().isEmpty()) {
-            Familias familias = new Familias(jTextFieldCodigo.getText());
+            Familias familias = new Familias(jTextFieldCodigo.getText(), jTextFieldNombre.getText(), jTextFieldDescripcion.getText());
             if (listaFamilias.contains(familias)) {
-                familias.setNombrefam(jTextFieldNombre.getText());
-                familias.setCategoriafam(jTextFieldCategoria.getText());
-                familias.setDescripcionfam(jTextFieldDescripcion.getText());
-                if (familiaEnFoco == null) {
-                    familiaEnFoco = listaFamilias.get(listaFamilias.indexOf(familias));
-                }
-                familias.setArticuloses(familiaEnFoco.getArticuloses());
                 crud.update(familias);
-                listaFamilias.set(listaFamilias.indexOf(familiaEnFoco), familias);
             } else {
                 int opcion = JOptionPane.showOptionDialog(null, "No existe una familia con ese código de familia."
                         + " ¿Desea crearla?", "Crear", JOptionPane.YES_NO_CANCEL_OPTION,
                         JOptionPane.QUESTION_MESSAGE, null, null, null);
                 if (opcion == 0) {
-                    familias = new Familias(jTextFieldCodigo.getText(), jTextFieldNombre.getText(), jTextFieldDescripcion.getText(), jTextFieldCategoria.getText(), null);
+                    familias.setArticuloses(new HashSet(0));
                     crud.create(familias);
                 }
             }
@@ -268,10 +265,10 @@ public class FamiliasJDialog extends javax.swing.JDialog {
     private void jButtonGestionArticulosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGestionArticulosActionPerformed
         if (familiaEnFoco != null) {
             if (familiaEnFoco.getArticuloses().size() > 0) {
-                ArticulosJDia   log articulosJDialog = new ArticulosJDialog((Frame) this.getParent(), true, familiaEnFoco.getArticuloses());
+                ArticulosJDialog articulosJDialog = new ArticulosJDialog((Frame) this.getParent(), true, familiaEnFoco);
                 articulosJDialog.setBounds(Herramientas.bondsDeDialogs(this, articulosJDialog));
                 articulosJDialog.setVisible(true);
-            }else{
+            } else {
                 JOptionPane.showMessageDialog(null, "La familia seleccionada no dispone de artículos.");
             }
         } else {
@@ -279,6 +276,10 @@ public class FamiliasJDialog extends javax.swing.JDialog {
         }
 
     }//GEN-LAST:event_jButtonGestionArticulosActionPerformed
+
+    private void jButtonActualizarTablaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonActualizarTablaActionPerformed
+        actualizarTabla();
+    }//GEN-LAST:event_jButtonActualizarTablaActionPerformed
 
     public static void main(String args[]) {
 
@@ -314,6 +315,7 @@ public class FamiliasJDialog extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButtonActualizarTabla;
     private javax.swing.JButton jButtonBorrar;
     private javax.swing.JButton jButtonCrear;
     private javax.swing.JButton jButtonGestionArticulos;
@@ -321,10 +323,8 @@ public class FamiliasJDialog extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPaneFamilias;
     private javax.swing.JTable jTableFamilias;
-    private javax.swing.JTextField jTextFieldCategoria;
     private javax.swing.JTextField jTextFieldCodigo;
     private javax.swing.JTextField jTextFieldDescripcion;
     private javax.swing.JTextField jTextFieldNombre;

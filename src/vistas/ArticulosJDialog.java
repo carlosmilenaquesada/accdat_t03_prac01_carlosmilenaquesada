@@ -185,42 +185,11 @@ public class ArticulosJDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonBorrarActionPerformed
 
     private void jButtonCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCrearActionPerformed
-        if (!jTextFieldCodigo.getText().isEmpty()) {
-            jTableArticulos.clearSelection();
-            Familias familias = new Familias(jTextFieldCodigo.getText(), jTextFieldNombre.getText(), jTextFieldDescripcion.getText(), jTextFieldCategoria.getText(), null);
-            crud.create(familias);
-            actualizarTabla();
-        } else {
-            JOptionPane.showMessageDialog(null, "Debe proporcionar un código de familia válido.");
-        }
+       
     }//GEN-LAST:event_jButtonCrearActionPerformed
 
     private void jButtonModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonModificarActionPerformed
-        if (!jTextFieldCodigo.getText().isEmpty()) {
-            Familias familias = new Familias(jTextFieldCodigo.getText());
-            if (listaFamilias.contains(familias)) {
-                familias.setNombrefam(jTextFieldNombre.getText());
-                familias.setCategoriafam(jTextFieldCategoria.getText());
-                familias.setDescripcionfam(jTextFieldDescripcion.getText());
-                if (familiaEnFoco == null) {
-                    familiaEnFoco = listaFamilias.get(listaFamilias.indexOf(familias));
-                }
-                familias.setArticuloses(familiaEnFoco.getArticuloses());
-                crud.update(familias);
-                listaFamilias.set(listaFamilias.indexOf(familiaEnFoco), familias);
-            } else {
-                int opcion = JOptionPane.showOptionDialog(null, "No existe una familia con ese código de familia."
-                    + " ¿Desea crearla?", "Crear", JOptionPane.YES_NO_CANCEL_OPTION,
-                    JOptionPane.QUESTION_MESSAGE, null, null, null);
-                if (opcion == 0) {
-                    familias = new Familias(jTextFieldCodigo.getText(), jTextFieldNombre.getText(), jTextFieldDescripcion.getText(), jTextFieldCategoria.getText(), null);
-                    crud.create(familias);
-                }
-            }
-            actualizarTabla();
-        } else {
-            JOptionPane.showMessageDialog(null, "Debe seleccione o escriba un código de familia para iniciar la modificación.");
-        }
+     
     }//GEN-LAST:event_jButtonModificarActionPerformed
 
     public static void main(String args[]) {

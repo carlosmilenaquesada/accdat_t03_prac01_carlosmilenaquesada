@@ -31,8 +31,6 @@ public class Herramientas {
         return new Rectangle(padre.getX() + 10, padre.getY() + 10, jDialog.getWidth(), jDialog.getHeight());
     }
     
-    public static List actualizarList(Class c) {
-        return new Crud().readAll("from " + c.getName());
-    }
+  
 
 }

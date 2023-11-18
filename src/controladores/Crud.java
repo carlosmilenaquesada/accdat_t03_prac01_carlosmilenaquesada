@@ -1,6 +1,7 @@
 package controladores;
 
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.List;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -30,16 +31,19 @@ public class Crud {
     /**
      * CREATE
      */
-    public void create(Serializable s) {
+    public String create(Serializable s) {
+        String error = "";
         try {
             iniciarOperacion();
             ss.save(s);
             tx.commit();
         } catch (HibernateException e) {
+            error = e.getCause().getMessage();
             tx.rollback();
         } finally {
             cerrarOperacion();
         }
+        return error;
     }
 
     /**
@@ -76,15 +80,16 @@ public class Crud {
     /**
      * Devuelve una colección {@code List} de todos los registros de la clase
      * consultada.
-     * @param from indica la clase a consultar. Debe respetar
-     * el nombre exacto de la clase del modelo.
-     * @return 
-     * {@code null} - si la clase indicada en el {@code from} no existe.<br><br>
-     * {@code List size 0} - si la clase existe, pero no contiene registros.<br><br>
-     * {@code List size !0} - si la clase existe y contiene registros, crea un 
-     * List de los registros. Si la clase consultada en el {@code from} mapea una
-     * colección de otra clase (set), dará excepción al manipular los elementos
-     * de la colección, si el atributo {@code lazy} del set es {@code true}.
+     *
+     * @param from indica la clase a consultar. Debe respetar el nombre exacto
+     * de la clase del modelo.
+     * @return {@code null} - si la clase indicada en el {@code from} no
+     * existe.<br><br> {@code List size 0} - si la clase existe, pero no
+     * contiene registros.<br><br> {@code List size !0} - si la clase existe y
+     * contiene registros, crea un List de los registros. Si la clase consultada
+     * en el {@code from} mapea una colección de otra clase (set), dará
+     * excepción al manipular los elementos de la colección, si el atributo
+     * {@code lazy} del set es {@code true}.
      */
     public List readAll(String from) {
         List coleccion = null;
