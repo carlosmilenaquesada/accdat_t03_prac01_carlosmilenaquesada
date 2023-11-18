@@ -2,9 +2,9 @@ package vistas;
 
 import controladores.Crud;
 import controladores.Herramientas;
+import java.awt.Frame;
 import java.math.BigDecimal;
 import java.text.ParseException;
-import java.util.HashSet;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
@@ -19,6 +19,8 @@ public class FacturasJDialog extends javax.swing.JDialog {
     Crud crud;
     DefaultTableModel dtmFacturas;
     List<Facturas> listaFacturas;
+    private Facturas facturaEnFoco;
+    private int rowSeleccionada;
 
     public FacturasJDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -29,15 +31,19 @@ public class FacturasJDialog extends javax.swing.JDialog {
     private void initConfiguracion() {
         this.crud = new Crud();
         this.dtmFacturas = (DefaultTableModel) jtFacturas.getModel();
-
         this.jtFacturas.setCellSelectionEnabled(false);
         this.jtFacturas.setRowSelectionAllowed(true);
         actualizarTabla();
+
+        this.rowSeleccionada = jtFacturas.getSelectedRow();
 
         this.jtFacturas.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 if (e.getValueIsAdjusting()) {
+                    rowSeleccionada = jtFacturas.getSelectedRow();
+                    Object pkRowSeleccionada = jtFacturas.getValueAt(rowSeleccionada, 0);
+                    facturaEnFoco = listaFacturas.get(listaFacturas.indexOf(new Facturas((BigDecimal) pkRowSeleccionada)));
                     actualizarInputsTexto();
                 }
             }
@@ -48,9 +54,6 @@ public class FacturasJDialog extends javax.swing.JDialog {
         listaFacturas = (List<Facturas>) crud.readAllCriteria(Facturas.class);
         Herramientas.limpiarTabla(dtmFacturas);
         for (Facturas f : listaFacturas) {
-            System.out.println(f.getNumfactura());
-            //System.out.println(f);
-
             dtmFacturas.addRow(
                     new Object[]{f.getNumfactura(), f.getClientes().getCodcliente(), Herramientas.sdf.format(f.getFechafactura()), f.getArticuloses().size()}
             );
@@ -58,7 +61,7 @@ public class FacturasJDialog extends javax.swing.JDialog {
     }
 
     private void actualizarInputsTexto() {
-        int rowSeleccionada = jtFacturas.getSelectedRow();
+        rowSeleccionada = jtFacturas.getSelectedRow();
         jtfNumero.setText(Herramientas.dfNumEntero.format(jtFacturas.getValueAt(rowSeleccionada, 0)));
         jtfCliente.setText((String) jtFacturas.getValueAt(rowSeleccionada, 1));
         jtfFecha.setText((String) jtFacturas.getValueAt(rowSeleccionada, 2));
@@ -79,6 +82,7 @@ public class FacturasJDialog extends javax.swing.JDialog {
         jbBorrar = new javax.swing.JButton();
         jspFacturas = new javax.swing.JScrollPane();
         jtFacturas = new javax.swing.JTable();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Gestión de facturas");
@@ -131,31 +135,38 @@ public class FacturasJDialog extends javax.swing.JDialog {
         jspFacturas.setViewportView(jtFacturas);
         jtFacturas.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 
+        jButton1.setText("Gestionar líneas factura");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jbCrear)
                         .addGap(18, 18, 18)
                         .addComponent(jbModificar)
                         .addGap(18, 18, 18)
                         .addComponent(jbBorrar)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jspFacturas, javax.swing.GroupLayout.DEFAULT_SIZE, 479, Short.MAX_VALUE)
                         .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jtfNumero, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel3)
-                            .addComponent(jtfCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel4)
-                            .addComponent(jtfFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap())
+                        .addComponent(jButton1))
+                    .addComponent(jspFacturas))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jtfNumero, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel3)
+                    .addComponent(jtfCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4)
+                    .addComponent(jtfFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -180,7 +191,8 @@ public class FacturasJDialog extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jbCrear, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jbModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jbBorrar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jbBorrar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -188,30 +200,33 @@ public class FacturasJDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jbCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbCrearActionPerformed
-        /*if (!jtfNumero.getText().isEmpty()) {
-            Articulos articulos = null;
+        if (!jtfNumero.getText().isEmpty()) {
+            Facturas facturas = null;
             try {
-                articulos = new Articulos(
-                    jtfNumero.getText(),
-                    familias,
-                    jtfCliente.getText(),
-                    Herramientas.stringABigDecimalPrecio(jtfFecha.getText()),
-                    null
-                );
+                Clientes c = (Clientes) crud.read(Clientes.class, jtfCliente.getText());
+                if (c != null) {
+                    facturas = new Facturas(
+                            Herramientas.stringABigDecimalNumEntero(jtfNumero.getText()),
+                            c,
+                            Herramientas.sdf.parse(jtfFecha.getText()),
+                            null
+                    );
+                }
+
+                if (facturas != null) {
+                    String error = "";
+                    error = crud.create(facturas);
+                    if (!error.isEmpty()) {
+                        JOptionPane.showMessageDialog(null, "No se pudo crear la factura."
+                                + "\nDescripción del error: " + error);
+                    } else {
+                        actualizarTabla();
+                    }
+                }
             } catch (ParseException ex) {
                 JOptionPane.showMessageDialog(null, "El precio proporcionado no es válido.");
             }
-            if (articulos != null) {
-                String error = "";
-                error = crud.create(articulos);
-                if (!error.isEmpty()) {
-                    JOptionPane.showMessageDialog(null, "No se pudo crear el artículo."
-                        + "\nDescripción del error: " + error);
-                } else {
-                    actualizarTabla();
-                }
-            }
-        }*/
+        }
     }//GEN-LAST:event_jbCrearActionPerformed
 
     private void jbModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbModificarActionPerformed
@@ -231,7 +246,6 @@ public class FacturasJDialog extends javax.swing.JDialog {
                 } else {
                     JOptionPane.showMessageDialog(null, "No existe una factura con ese número de factura.");
                 }
-
             } catch (ParseException ex) {
                 JOptionPane.showMessageDialog(null, "El número de factura proporcionado no es válido.");
             }
@@ -252,6 +266,22 @@ public class FacturasJDialog extends javax.swing.JDialog {
         }*/
     }//GEN-LAST:event_jbBorrarActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        if (facturaEnFoco != null) {
+            if (facturaEnFoco.getArticuloses().size() > 0) {
+                LineasFacturaJDialog lineasFacturaJDialog = new LineasFacturaJDialog((Frame) this.getParent(), true, facturaEnFoco);
+                lineasFacturaJDialog.setBounds(Herramientas.bondsDeDialogs(this, lineasFacturaJDialog));
+                lineasFacturaJDialog.setVisible(true);
+            } else {
+                JOptionPane.showMessageDialog(null, "La factura seleccionada no contiene líneas.");
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Marque una familia en la tabla sobre la que gestionar los artículos.");
+        }
+
+
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -268,6 +298,7 @@ public class FacturasJDialog extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

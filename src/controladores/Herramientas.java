@@ -37,14 +37,14 @@ public class Herramientas {
 
     public static DecimalFormat dfNumEntero = new DecimalFormat("0");
 
-    public static BigDecimal stringABigDecimalNumEntero(String numero) throws ParseException {
-        return BigDecimal.valueOf(dfNumEntero.parse(numero).longValue());
+    public static BigDecimal stringABigDecimalNumEntero(String numeroString) throws ParseException {
+        return BigDecimal.valueOf(dfNumEntero.parse(numeroString).longValue());
     }
 
     public static DecimalFormat dfPrecio = new DecimalFormat("0.00");
 
-    public static BigDecimal stringABigDecimalPrecio(String precio) throws ParseException {
-        return BigDecimal.valueOf(dfPrecio.parse(precio).doubleValue());
+    public static BigDecimal stringABigDecimalPrecio(String precioString) throws ParseException {
+        return BigDecimal.valueOf(dfPrecio.parse(precioString).doubleValue());
     }
 
     public static SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");

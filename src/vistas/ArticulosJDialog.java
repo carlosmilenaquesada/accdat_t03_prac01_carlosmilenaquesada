@@ -2,7 +2,6 @@ package vistas;
 
 import controladores.Crud;
 import controladores.Herramientas;
-import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.HashSet;
 import java.util.Set;
@@ -18,7 +17,7 @@ public class ArticulosJDialog extends javax.swing.JDialog {
     Crud crud;
     private Familias familias;
     DefaultTableModel dtmArticulos;
-    Articulos articuloEnFoco;
+    
 
     public ArticulosJDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
