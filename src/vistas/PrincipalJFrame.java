@@ -19,7 +19,7 @@ public class PrincipalJFrame extends javax.swing.JFrame {
         jButtonFacturas = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Gestión de ventas");
+        setTitle("Práctica de Hibernate - Carlos Milena Quesada");
         setMinimumSize(new java.awt.Dimension(280, 240));
         setResizable(false);
 

@@ -124,15 +124,19 @@ public class Crud {
     /**
      * DELETE
      */
-    public void delete(Serializable s) {
+    public String delete(Serializable s) {
+        String error = "";
         try {
             iniciarOperacion();
             ss.delete(s);
             tx.commit();
         } catch (HibernateException e) {
+             error = e.getCause().getMessage();
             tx.rollback();
         } finally {
             cerrarOperacion();
         }
-    }
+        return error;
+    }   
+    
 }

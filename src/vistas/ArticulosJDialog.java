@@ -1,13 +1,27 @@
 package vistas;
 
+import controladores.Crud;
+import controladores.Herramientas;
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.util.HashSet;
+import java.util.Set;
+import javax.swing.JOptionPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
+import modelos.Articulos;
 import modelos.Familias;
 
 public class ArticulosJDialog extends javax.swing.JDialog {
 
+    Crud crud;
     private Familias familias;
     DefaultTableModel dtmArticulos;
-    
+    //int rowSeleccionada;
+    Object pkRowSeleccionada;
+    Articulos articuloEnFoco;
+
     public ArticulosJDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -18,16 +32,49 @@ public class ArticulosJDialog extends javax.swing.JDialog {
         this.familias = familias;
         initComponents();
         initConfiguracion();
-         /*private String referenciaart;
-     private Familias familias;
-     private String nombreart;
-     private String impuestoart;
-     private Set artFacts = new HashSet(0);*/
+
     }
 
     private void initConfiguracion() {
-        dtmArticulos = (DefaultTableModel) jTableArticulos.getModel();
-        
+        this.crud = new Crud();
+        this.dtmArticulos = (DefaultTableModel) jtArticulos.getModel();
+
+        this.jtArticulos.setCellSelectionEnabled(false);
+        this.jtArticulos.setRowSelectionAllowed(true);
+        rellenarTablaArticulos();
+
+        this.jtArticulos.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (e.getValueIsAdjusting()) {
+                    actualizarInputsTexto();
+                }
+            }
+        });
+    }
+
+    private void rellenarTablaArticulos() {
+        for (Articulos a : (Set<Articulos>) familias.getArticuloses()) {
+            dtmArticulos.addRow(
+                    new Object[]{a.getCodarticulo(),
+                        a.getNomarticulo(),
+                        Herramientas.df.format(a.getPrecioarticulo()),
+                        a.getFacturases().size()}
+            );
+        }
+    }
+
+    private void actualizarTabla() {
+        familias = (Familias) crud.read(Familias.class, familias.getCodfamilia());
+        Herramientas.limpiarTabla(dtmArticulos);
+        rellenarTablaArticulos();
+    }
+
+    private void actualizarInputsTexto() {
+        int rowSeleccionada = jtArticulos.getSelectedRow();
+        jtfCodigo.setText((String) jtArticulos.getValueAt(rowSeleccionada, 0));
+        jtfNombre.setText((String) jtArticulos.getValueAt(rowSeleccionada, 1));
+        jtfPrecio.setText((String) jtArticulos.getValueAt(rowSeleccionada, 2));
     }
 
     @SuppressWarnings("unchecked")
@@ -35,80 +82,69 @@ public class ArticulosJDialog extends javax.swing.JDialog {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jButtonBorrar = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        jTextFieldCodigo = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
-        jTextFieldNombre = new javax.swing.JTextField();
+        jtfCodigo = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        jTextFieldDescripcion = new javax.swing.JTextField();
+        jtfNombre = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        jTextFieldCategoria = new javax.swing.JTextField();
-        jButtonCrear = new javax.swing.JButton();
-        jButtonModificar = new javax.swing.JButton();
-        jScrollPaneArticulos = new javax.swing.JScrollPane();
-        jTableArticulos = new javax.swing.JTable();
+        jtfPrecio = new javax.swing.JTextField();
+        jbCrear = new javax.swing.JButton();
+        jbModificar = new javax.swing.JButton();
+        jbBorrar = new javax.swing.JButton();
+        jcpArticulos = new javax.swing.JScrollPane();
+        jtArticulos = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Gestion de artículos");
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
-        jButtonBorrar.setText("Eliminar artículo");
-        jButtonBorrar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonBorrarActionPerformed(evt);
-            }
-        });
-
-        jLabel1.setText("Referencia");
-
-        jLabel2.setText("Familia");
+        jLabel1.setText("Código");
 
         jLabel3.setText("Nombre");
 
-        jLabel4.setText("Impuesto");
+        jLabel4.setText("Precio");
 
-        jButtonCrear.setText("Crear artículo");
-        jButtonCrear.addActionListener(new java.awt.event.ActionListener() {
+        jbCrear.setText("Crear artículo");
+        jbCrear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonCrearActionPerformed(evt);
+                jbCrearActionPerformed(evt);
             }
         });
 
-        jButtonModificar.setText("Modificar artículo");
-        jButtonModificar.addActionListener(new java.awt.event.ActionListener() {
+        jbModificar.setText("Modificar artículo");
+        jbModificar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonModificarActionPerformed(evt);
+                jbModificarActionPerformed(evt);
             }
         });
 
-        jTableArticulos.setModel(new javax.swing.table.DefaultTableModel(
+        jbBorrar.setText("Eliminar artículo");
+        jbBorrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbBorrarActionPerformed(evt);
+            }
+        });
+
+        jtArticulos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Referencia", "Familia", "Nombre", "Impuesto", "Cantidad facturas"
+                "Código", "Nombre", "Precio", "Facturas asociadas"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        jTableArticulos.setColumnSelectionAllowed(true);
-        jTableArticulos.getTableHeader().setReorderingAllowed(false);
-        jScrollPaneArticulos.setViewportView(jTableArticulos);
-        jTableArticulos.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-        if (jTableArticulos.getColumnModel().getColumnCount() > 0) {
-            jTableArticulos.getColumnModel().getColumn(0).setResizable(false);
-            jTableArticulos.getColumnModel().getColumn(1).setResizable(false);
-            jTableArticulos.getColumnModel().getColumn(2).setResizable(false);
-            jTableArticulos.getColumnModel().getColumn(3).setResizable(false);
-            jTableArticulos.getColumnModel().getColumn(4).setResizable(false);
-        }
+        jtArticulos.setColumnSelectionAllowed(true);
+        jtArticulos.getTableHeader().setReorderingAllowed(false);
+        jcpArticulos.setViewportView(jtArticulos);
+        jtArticulos.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -118,23 +154,23 @@ public class ArticulosJDialog extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButtonCrear)
+                        .addComponent(jbCrear)
                         .addGap(18, 18, 18)
-                        .addComponent(jButtonModificar)
+                        .addComponent(jbModificar)
                         .addGap(18, 18, 18)
-                        .addComponent(jButtonBorrar))
-                    .addComponent(jScrollPaneArticulos, javax.swing.GroupLayout.PREFERRED_SIZE, 464, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextFieldCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2)
-                    .addComponent(jTextFieldNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3)
-                    .addComponent(jTextFieldDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4)
-                    .addComponent(jTextFieldCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(116, Short.MAX_VALUE))
+                        .addComponent(jbBorrar)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jcpArticulos, javax.swing.GroupLayout.DEFAULT_SIZE, 570, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jtfCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel3)
+                            .addComponent(jtfNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4)
+                            .addComponent(jtfPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -142,27 +178,24 @@ public class ArticulosJDialog extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(84, 84, 84)
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextFieldCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextFieldNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jtfCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextFieldDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jtfNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextFieldCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPaneArticulos, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                        .addComponent(jtfPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jcpArticulos, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButtonCrear, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButtonModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButtonBorrar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jbCrear, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jbModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jbBorrar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -180,17 +213,62 @@ public class ArticulosJDialog extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButtonBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBorrarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButtonBorrarActionPerformed
+    private void jbCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbCrearActionPerformed
+        if (!jtfCodigo.getText().isEmpty()) {
+            Articulos articulos = null;
+            try {
+                articulos = new Articulos(
+                        jtfCodigo.getText(),
+                        familias,
+                        jtfNombre.getText(),
+                        Herramientas.stringABigDecimalPrecio(jtfPrecio.getText()),
+                        null
+                );
+            } catch (ParseException ex) {
+                JOptionPane.showMessageDialog(null, "El precio proporcionado no es válido.");
+            }
+            if (articulos != null) {
+                String error = "";
+                error = crud.create(articulos);
+                if (!error.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "No se pudo crear el artículo."
+                            + "\nDescripción del error: " + error);
+                } else {
+                    actualizarTabla();
+                }
+            }
 
-    private void jButtonCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCrearActionPerformed
-       
-    }//GEN-LAST:event_jButtonCrearActionPerformed
+        }
+    }//GEN-LAST:event_jbCrearActionPerformed
 
-    private void jButtonModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonModificarActionPerformed
-     
-    }//GEN-LAST:event_jButtonModificarActionPerformed
+    private void jbModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbModificarActionPerformed
+        if (!jtfCodigo.getText().isEmpty()) {
+            try {
+                Articulos articulos = new Articulos(jtfCodigo.getText(), familias, jtfNombre.getText(), Herramientas.stringABigDecimalPrecio(jtfPrecio.getText()));
+                if (familias.getArticuloses().contains(articulos)) {
+                    crud.update(familias);
+                } else {
+                    int opcion = JOptionPane.showOptionDialog(null, "No existe un artículo con ese código de artículo."
+                            + " ¿Desea crearlo?", "Crear", JOptionPane.YES_NO_CANCEL_OPTION,
+                            JOptionPane.QUESTION_MESSAGE, null, null, null);
+                    if (opcion == 0) {
+                        articulos.setFacturases(new HashSet(0));
+                        crud.create(articulos);
+                    }
+                }
+                actualizarTabla();
+            } catch (ParseException ex) {
+                JOptionPane.showMessageDialog(null, "El precio proporcionado no es válido.");
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Debe seleccione o escriba un código de familia para iniciar la modificación.");
+        }
+    }//GEN-LAST:event_jbModificarActionPerformed
+
+    private void jbBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbBorrarActionPerformed
+        
+        crud.delete(new Articulos(jtfCodigo.getText()));
+    }//GEN-LAST:event_jbBorrarActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -232,19 +310,17 @@ public class ArticulosJDialog extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButtonBorrar;
-    private javax.swing.JButton jButtonCrear;
-    private javax.swing.JButton jButtonModificar;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPaneArticulos;
-    private javax.swing.JTable jTableArticulos;
-    private javax.swing.JTextField jTextFieldCategoria;
-    private javax.swing.JTextField jTextFieldCodigo;
-    private javax.swing.JTextField jTextFieldDescripcion;
-    private javax.swing.JTextField jTextFieldNombre;
+    private javax.swing.JButton jbBorrar;
+    private javax.swing.JButton jbCrear;
+    private javax.swing.JButton jbModificar;
+    private javax.swing.JScrollPane jcpArticulos;
+    private javax.swing.JTable jtArticulos;
+    private javax.swing.JTextField jtfCodigo;
+    private javax.swing.JTextField jtfNombre;
+    private javax.swing.JTextField jtfPrecio;
     // End of variables declaration//GEN-END:variables
 }

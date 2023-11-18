@@ -2,6 +2,9 @@ package controladores;
 
 import java.awt.Component;
 import java.awt.Rectangle;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
@@ -30,7 +33,11 @@ public class Herramientas {
     public static Rectangle bondsDeDialogs(Component padre, JDialog jDialog) {
         return new Rectangle(padre.getX() + 10, padre.getY() + 10, jDialog.getWidth(), jDialog.getHeight());
     }
-    
-  
+
+    public static DecimalFormat df = new DecimalFormat("0.00");
+
+    public static BigDecimal stringABigDecimalPrecio(String precio) throws ParseException {
+        return BigDecimal.valueOf((Double) Herramientas.df.parse(precio));
+    }
 
 }

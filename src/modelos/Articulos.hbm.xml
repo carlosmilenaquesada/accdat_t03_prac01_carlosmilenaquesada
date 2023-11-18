@@ -17,7 +17,8 @@
         <property name="precioarticulo" type="big_decimal">
             <column name="PRECIOARTICULO" precision="12" />
         </property>
-        <set name="facturases" table="FACT_ART" inverse="true" lazy="true" fetch="select">
+        <!--<set name="facturases" table="FACT_ART" inverse="true" lazy="true" fetch="select">-->
+        <set name="facturases" table="FACT_ART" inverse="true" lazy="false" fetch="select">
             <key>
                 <column name="CODARTICULO" length="20" not-null="true" />
             </key>

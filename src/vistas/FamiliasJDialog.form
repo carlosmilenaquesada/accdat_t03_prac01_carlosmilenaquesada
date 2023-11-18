@@ -28,27 +28,27 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                   <Group type="102" attributes="0">
-                      <Component id="jButtonCrear" min="-2" max="-2" attributes="0"/>
+                      <Component id="jbCrear" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="jButtonModificar" min="-2" max="-2" attributes="0"/>
+                      <Component id="jbModificar" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="jButtonBorrar" min="-2" max="-2" attributes="0"/>
+                      <Component id="jbBorrar" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Component id="jButtonGestionArticulos" min="-2" max="-2" attributes="0"/>
+                      <Component id="jbGestionArticulos" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <Component id="jScrollPaneFamilias" max="32767" attributes="0"/>
+                  <Component id="jcPaneFamilias" max="32767" attributes="0"/>
               </Group>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jTextFieldCodigo" alignment="0" max="32767" attributes="0"/>
-                  <Component id="jTextFieldNombre" alignment="0" max="32767" attributes="0"/>
-                  <Component id="jTextFieldDescripcion" alignment="0" max="32767" attributes="0"/>
+                  <Component id="jtfCodigo" alignment="0" max="32767" attributes="0"/>
+                  <Component id="jtfNombre" alignment="0" max="32767" attributes="0"/>
+                  <Component id="jtfDescripcion" alignment="0" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="jLabel1" max="-2" attributes="0"/>
                           <Component id="jLabel2" alignment="0" max="-2" attributes="0"/>
                           <Component id="jLabel3" alignment="0" max="-2" attributes="0"/>
-                          <Component id="jButtonActualizarTabla" min="-2" max="-2" attributes="0"/>
+                          <Component id="jbActualizarTabla" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="0" pref="117" max="32767" attributes="0"/>
                   </Group>
@@ -63,28 +63,28 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                   <Group type="102" attributes="0">
-                      <Component id="jButtonActualizarTabla" min="-2" pref="30" max="-2" attributes="0"/>
+                      <Component id="jbActualizarTabla" min="-2" pref="30" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                       <Component id="jLabel1" min="-2" pref="30" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jTextFieldCodigo" min="-2" pref="30" max="-2" attributes="0"/>
+                      <Component id="jtfCodigo" min="-2" pref="30" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="jLabel2" min="-2" pref="30" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jTextFieldNombre" min="-2" pref="30" max="-2" attributes="0"/>
+                      <Component id="jtfNombre" min="-2" pref="30" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="jLabel3" min="-2" pref="30" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jTextFieldDescripcion" min="-2" pref="30" max="-2" attributes="0"/>
+                      <Component id="jtfDescripcion" min="-2" pref="30" max="-2" attributes="0"/>
                   </Group>
-                  <Component id="jScrollPaneFamilias" min="-2" pref="318" max="-2" attributes="0"/>
+                  <Component id="jcPaneFamilias" min="-2" pref="318" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jButtonCrear" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
-                  <Component id="jButtonModificar" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
-                  <Component id="jButtonBorrar" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
-                  <Component id="jButtonGestionArticulos" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
+                  <Component id="jbCrear" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
+                  <Component id="jbModificar" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
+                  <Component id="jbBorrar" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
+                  <Component id="jbGestionArticulos" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
@@ -92,12 +92,12 @@
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="javax.swing.JButton" name="jButtonBorrar">
+    <Component class="javax.swing.JButton" name="jbActualizarTabla">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Eliminar familia"/>
+        <Property name="text" type="java.lang.String" value="Actualizar tabla"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonBorrarActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbActualizarTablaActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel1">
@@ -105,62 +105,62 @@
         <Property name="text" type="java.lang.String" value="C&#xf3;digo"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="jTextFieldCodigo">
+    <Component class="javax.swing.JTextField" name="jtfCodigo">
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel2">
       <Properties>
         <Property name="text" type="java.lang.String" value="Nombre"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="jTextFieldNombre">
+    <Component class="javax.swing.JTextField" name="jtfNombre">
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel3">
       <Properties>
         <Property name="text" type="java.lang.String" value="Descripci&#xf3;n"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="jTextFieldDescripcion">
+    <Component class="javax.swing.JTextField" name="jtfDescripcion">
     </Component>
-    <Component class="javax.swing.JButton" name="jButtonCrear">
+    <Component class="javax.swing.JButton" name="jbCrear">
       <Properties>
         <Property name="text" type="java.lang.String" value="Crear familia"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonCrearActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbCrearActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="jButtonModificar">
+    <Component class="javax.swing.JButton" name="jbModificar">
       <Properties>
         <Property name="text" type="java.lang.String" value="Modificar familia"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonModificarActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbModificarActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="jButtonGestionArticulos">
+    <Component class="javax.swing.JButton" name="jbBorrar">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Eliminar familia"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbBorrarActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="jbGestionArticulos">
       <Properties>
         <Property name="text" type="java.lang.String" value="Gestionar art&#xed;culos de la familia"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonGestionArticulosActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbGestionArticulosActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="jButtonActualizarTabla">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Actualizar tabla"/>
-      </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonActualizarTablaActionPerformed"/>
-      </Events>
-    </Component>
-    <Container class="javax.swing.JScrollPane" name="jScrollPaneFamilias">
+    <Container class="javax.swing.JScrollPane" name="jcPaneFamilias">
       <AuxValues>
         <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
       </AuxValues>
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
       <SubComponents>
-        <Component class="javax.swing.JTable" name="jTableFamilias">
+        <Component class="javax.swing.JTable" name="jtFamilias">
           <Properties>
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
               <Table columnCount="4" rowCount="0">
