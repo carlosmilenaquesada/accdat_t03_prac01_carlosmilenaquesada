@@ -79,6 +79,16 @@ public class Articulos implements java.io.Serializable {
         this.facturases = facturases;
     }
 
+    //Funciones creadas por mí
+    //Función de añadir una factura al set de facturas de un artículo (artículos es el master, facturas el slave).
+    public void addFacturas(Facturas facturas){
+        this.getFacturases().add(facturas);    
+    }
+    
+    
+    
+    
+    
     @Override
     public int hashCode() {
         int hash = 7;

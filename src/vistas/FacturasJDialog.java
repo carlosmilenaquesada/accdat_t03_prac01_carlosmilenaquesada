@@ -82,7 +82,7 @@ public class FacturasJDialog extends javax.swing.JDialog {
         jbBorrar = new javax.swing.JButton();
         jspFacturas = new javax.swing.JScrollPane();
         jtFacturas = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
+        jbGestionFacturas = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Gestión de facturas");
@@ -135,10 +135,10 @@ public class FacturasJDialog extends javax.swing.JDialog {
         jspFacturas.setViewportView(jtFacturas);
         jtFacturas.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 
-        jButton1.setText("Gestionar líneas factura");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jbGestionFacturas.setText("Gestionar líneas factura");
+        jbGestionFacturas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                jbGestionFacturasActionPerformed(evt);
             }
         });
 
@@ -156,7 +156,7 @@ public class FacturasJDialog extends javax.swing.JDialog {
                         .addGap(18, 18, 18)
                         .addComponent(jbBorrar)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton1))
+                        .addComponent(jbGestionFacturas))
                     .addComponent(jspFacturas))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -192,7 +192,7 @@ public class FacturasJDialog extends javax.swing.JDialog {
                     .addComponent(jbCrear, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jbModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jbBorrar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jbGestionFacturas, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -266,21 +266,17 @@ public class FacturasJDialog extends javax.swing.JDialog {
         }*/
     }//GEN-LAST:event_jbBorrarActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void jbGestionFacturasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbGestionFacturasActionPerformed
         if (facturaEnFoco != null) {
-            if (facturaEnFoco.getArticuloses().size() > 0) {
-                LineasFacturaJDialog lineasFacturaJDialog = new LineasFacturaJDialog((Frame) this.getParent(), true, facturaEnFoco);
-                lineasFacturaJDialog.setBounds(Herramientas.bondsDeDialogs(this, lineasFacturaJDialog));
-                lineasFacturaJDialog.setVisible(true);
-            } else {
-                JOptionPane.showMessageDialog(null, "La factura seleccionada no contiene líneas.");
-            }
+            LineasFacturaJDialog lineasFacturaJDialog = new LineasFacturaJDialog((Frame) this.getParent(), true, facturaEnFoco);
+            lineasFacturaJDialog.setBounds(Herramientas.bondsDeDialogs(this, lineasFacturaJDialog));
+            lineasFacturaJDialog.setVisible(true);
         } else {
             JOptionPane.showMessageDialog(null, "Marque una familia en la tabla sobre la que gestionar los artículos.");
         }
 
 
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_jbGestionFacturasActionPerformed
 
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -298,12 +294,12 @@ public class FacturasJDialog extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JButton jbBorrar;
     private javax.swing.JButton jbCrear;
+    private javax.swing.JButton jbGestionFacturas;
     private javax.swing.JButton jbModificar;
     private javax.swing.JScrollPane jspFacturas;
     private javax.swing.JTable jtFacturas;
