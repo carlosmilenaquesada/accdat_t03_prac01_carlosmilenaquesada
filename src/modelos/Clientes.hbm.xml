@@ -1,25 +1,24 @@
-<?xml version="1.0"?>
-<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
-"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <!-- Generated 18-nov-2023 1:53:26 by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
-    <class name="modelos.Clientes" table="CLIENTES" schema="ACCDAT_T03_PRAC01" optimistic-lock="version">
-        <id name="codcliente" type="string">
-            <column name="CODCLIENTE" length="20" />
-            <generator class="assigned" />
-        </id>
-        <property name="nomcliente" type="string">
-            <column name="NOMCLIENTE" length="100" />
-        </property>
-        <property name="domiciliocli" type="string">
-            <column name="DOMICILIOCLI" length="100" />
-        </property>
-        <!--<set name="facturases" table="FACTURAS" inverse="true" lazy="true" fetch="select">-->
-        <set name="facturases" table="FACTURAS" inverse="true" lazy="false" fetch="select">
-            <key>
-                <column name="CODCLIENTE" length="20" />
-            </key>
-            <one-to-many class="modelos.Facturas" />
-        </set>
-    </class>
+  <class name="modelos.Cliente" optimistic-lock="version" schema="ACCDAT_T03_PRAC01" table="CLIENTES">
+    <id name="codCliente" type="string">
+      <column length="20" name="CODCLIENTE"/>
+      <generator class="assigned"/>
+    </id>
+    <property name="nomCliente" type="string">
+      <column length="100" name="NOMCLIENTE"/>
+    </property>
+    <property name="domicilioCli" type="string">
+      <column length="100" name="DOMICILIOCLI"/>
+    </property>
+    <!--<set name="facturases" table="FACTURAS" inverse="true" lazy="true" fetch="select">-->
+    <set fetch="select" inverse="true" lazy="false" name="listaFacturas" table="FACTURAS">
+      <key>
+        <column length="20" name="CODCLIENTE"/>
+      </key>
+      <one-to-many class="modelos.Factura"/>
+    </set>
+  </class>
 </hibernate-mapping>

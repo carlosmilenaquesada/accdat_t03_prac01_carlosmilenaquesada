@@ -1,30 +1,29 @@
-<?xml version="1.0"?>
-<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
-"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <!-- Generated 18-nov-2023 1:53:26 by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
-    <class name="modelos.Articulos" table="ARTICULOS" schema="ACCDAT_T03_PRAC01" optimistic-lock="version">
-        <id name="codarticulo" type="string">
-            <column name="CODARTICULO" length="20" />
-            <generator class="assigned" />
-        </id>
-        <many-to-one name="familias" class="modelos.Familias" fetch="select">
-            <column name="CODFAMILIA" length="20" />
-        </many-to-one>
-        <property name="nomarticulo" type="string">
-            <column name="NOMARTICULO" length="100" />
-        </property>
-        <property name="precioarticulo" type="big_decimal">
-            <column name="PRECIOARTICULO" precision="12" />
-        </property>
-        <!--<set name="facturases" table="FACT_ART" inverse="true" lazy="true" fetch="select">-->
-        <set name="facturases" table="FACT_ART" inverse="true" lazy="false" fetch="select">
-            <key>
-                <column name="CODARTICULO" length="20" not-null="true" />
-            </key>
-            <many-to-many entity-name="modelos.Facturas">
-                <column name="NUMFACTURA" precision="20" scale="0" not-null="true" />
-            </many-to-many>
-        </set>
-    </class>
+  <class name="modelos.Articulo" optimistic-lock="version" schema="ACCDAT_T03_PRAC01" table="ARTICULOS">
+    <id name="codArticulo" type="string">
+      <column length="20" name="CODARTICULO"/>
+      <generator class="assigned"/>
+    </id>
+    <many-to-one class="modelos.Familia" fetch="select" name="familia">
+      <column length="20" name="CODFAMILIA"/>
+    </many-to-one>
+    <property name="nomArticulo" type="string">
+      <column length="100" name="NOMARTICULO"/>
+    </property>
+    <property name="precioArticulo" type="big_decimal">
+      <column name="PRECIOARTICULO" precision="12"/>
+    </property>
+    <!--<set name="facturases" table="FACT_ART" inverse="true" lazy="true" fetch="select">-->
+    <set fetch="select" inverse="true" lazy="false" name="listaFacturas" table="FACT_ART">
+      <key>
+        <column length="20" name="CODARTICULO" not-null="true"/>
+      </key>
+      <many-to-many entity-name="modelos.Factura">
+        <column name="NUMFACTURA" not-null="true" precision="20" scale="0"/>
+      </many-to-many>
+    </set>
+  </class>
 </hibernate-mapping>

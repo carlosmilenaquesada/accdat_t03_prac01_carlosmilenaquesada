@@ -14,9 +14,9 @@ public class PrincipalJFrame extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jToolBar1 = new javax.swing.JToolBar();
-        jButtonFamilias = new javax.swing.JButton();
-        jButtonClientes = new javax.swing.JButton();
-        jButtonFacturas = new javax.swing.JButton();
+        jButtonFamilia = new javax.swing.JButton();
+        jButtonCliente = new javax.swing.JButton();
+        jButtonFactura = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Práctica de Hibernate - Carlos Milena Quesada");
@@ -28,41 +28,41 @@ public class PrincipalJFrame extends javax.swing.JFrame {
 
         jToolBar1.setRollover(true);
 
-        jButtonFamilias.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jButtonFamilias.setText("Familias");
-        jButtonFamilias.setFocusable(false);
-        jButtonFamilias.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButtonFamilias.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButtonFamilias.addActionListener(new java.awt.event.ActionListener() {
+        jButtonFamilia.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jButtonFamilia.setText("Familias");
+        jButtonFamilia.setFocusable(false);
+        jButtonFamilia.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButtonFamilia.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButtonFamilia.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonFamiliasActionPerformed(evt);
+                jButtonFamiliaActionPerformed(evt);
             }
         });
-        jToolBar1.add(jButtonFamilias);
+        jToolBar1.add(jButtonFamilia);
 
-        jButtonClientes.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jButtonClientes.setText("Clientes");
-        jButtonClientes.setFocusable(false);
-        jButtonClientes.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButtonClientes.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButtonClientes.addActionListener(new java.awt.event.ActionListener() {
+        jButtonCliente.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jButtonCliente.setText("Clientes");
+        jButtonCliente.setFocusable(false);
+        jButtonCliente.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButtonCliente.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButtonCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonClientesActionPerformed(evt);
+                jButtonClienteActionPerformed(evt);
             }
         });
-        jToolBar1.add(jButtonClientes);
+        jToolBar1.add(jButtonCliente);
 
-        jButtonFacturas.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jButtonFacturas.setText("Facturas");
-        jButtonFacturas.setFocusable(false);
-        jButtonFacturas.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButtonFacturas.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButtonFacturas.addActionListener(new java.awt.event.ActionListener() {
+        jButtonFactura.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jButtonFactura.setText("Facturas");
+        jButtonFactura.setFocusable(false);
+        jButtonFactura.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButtonFactura.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButtonFactura.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonFacturasActionPerformed(evt);
+                jButtonFacturaActionPerformed(evt);
             }
         });
-        jToolBar1.add(jButtonFacturas);
+        jToolBar1.add(jButtonFactura);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -96,23 +96,23 @@ public class PrincipalJFrame extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButtonClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonClientesActionPerformed
-        ClientesJDialog clientesJDialog = new ClientesJDialog(this, true);
-        clientesJDialog.setBounds(Herramientas.bondsDeDialogs(this, clientesJDialog));
-        clientesJDialog.setVisible(true);
-    }//GEN-LAST:event_jButtonClientesActionPerformed
+    private void jButtonClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonClienteActionPerformed
+        ClienteJDialog clienteJDialog = new ClienteJDialog(this, true);
+        clienteJDialog.setBounds(Herramientas.bondsDeDialogs(this, clienteJDialog));
+        clienteJDialog.setVisible(true);
+    }//GEN-LAST:event_jButtonClienteActionPerformed
 
-    private void jButtonFacturasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFacturasActionPerformed
-        FacturasJDialog facturasJDialog = new FacturasJDialog(this, true);
-        facturasJDialog.setBounds(Herramientas.bondsDeDialogs(this, facturasJDialog));
-        facturasJDialog.setVisible(true);
-    }//GEN-LAST:event_jButtonFacturasActionPerformed
+    private void jButtonFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFacturaActionPerformed
+        FacturaJDialog facturaJDialog = new FacturaJDialog(this, true);
+        facturaJDialog.setBounds(Herramientas.bondsDeDialogs(this, facturaJDialog));
+        facturaJDialog.setVisible(true);
+    }//GEN-LAST:event_jButtonFacturaActionPerformed
 
-    private void jButtonFamiliasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFamiliasActionPerformed
-        FamiliasJDialog familiasJDialog = new FamiliasJDialog(this, true);
-        familiasJDialog.setBounds(Herramientas.bondsDeDialogs(this, familiasJDialog));
-        familiasJDialog.setVisible(true);
-    }//GEN-LAST:event_jButtonFamiliasActionPerformed
+    private void jButtonFamiliaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFamiliaActionPerformed
+        FamiliaJDialog familiaJDialog = new FamiliaJDialog(this, true);
+        familiaJDialog.setBounds(Herramientas.bondsDeDialogs(this, familiaJDialog));
+        familiaJDialog.setVisible(true);
+    }//GEN-LAST:event_jButtonFamiliaActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -147,9 +147,9 @@ public class PrincipalJFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButtonClientes;
-    private javax.swing.JButton jButtonFacturas;
-    private javax.swing.JButton jButtonFamilias;
+    private javax.swing.JButton jButtonCliente;
+    private javax.swing.JButton jButtonFactura;
+    private javax.swing.JButton jButtonFamilia;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JToolBar jToolBar1;
     // End of variables declaration//GEN-END:variables
