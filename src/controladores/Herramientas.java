@@ -34,7 +34,7 @@ public class Herramientas {
     public static Rectangle bondsDeDialogs(Component padre, JDialog jDialog) {
         return new Rectangle(padre.getX() + 10, padre.getY() + 10, jDialog.getWidth(), jDialog.getHeight());
     }
-
+    /*
     public static DecimalFormat dfNumEntero = new DecimalFormat("0");
 
     public static BigDecimal stringABigDecimalNumEntero(String numeroString) throws ParseException {
@@ -48,5 +48,5 @@ public class Herramientas {
     }
 
     public static SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-
+     */
 }

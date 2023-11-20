@@ -36,6 +36,12 @@ public class Factura implements java.io.Serializable {
         this.fechaFactura = fechaFactura;
     }
 
+    public Factura(BigDecimal numFactura, Cliente cliente, Date fechaFactura) {
+        this.numFactura = numFactura;
+        this.cliente = cliente;
+        this.fechaFactura = fechaFactura;
+    }
+
     public BigDecimal getNumFactura() {
         return this.numFactura;
     }
@@ -73,6 +79,17 @@ public class Factura implements java.io.Serializable {
     public void addArticulo(Articulo articulo) {
         this.getListaArticulos().add(articulo);
         articulo.addFactura(this);
+    }
+
+    public void replaceArticulo(Articulo oldArticulo, Articulo newArticulo) {
+        this.getListaArticulos().remove(oldArticulo);
+        oldArticulo.getListaFacturas().remove(this);
+        this.addArticulo(newArticulo);
+    }
+
+    public void removeArticulo(Articulo articulo) {
+        this.getListaArticulos().remove(articulo);
+        articulo.getListaFacturas().remove(this);
     }
 
     @Override

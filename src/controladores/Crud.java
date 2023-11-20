@@ -8,6 +8,9 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Projection;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 
 public class Crud {
 
@@ -113,7 +116,7 @@ SessionFactory sf = NewHibernateUtil.getSessionFactory();
     }
 
     /**
-     *READALL usando HQL Query
+     * READALL usando HQL Query
      */
     public List readAllHQL(String from) {
         List lista = null;//comporbar si devuelve null o vacío en caso de qeu no haya registros
@@ -122,24 +125,33 @@ SessionFactory sf = NewHibernateUtil.getSessionFactory();
             q = ss.createQuery(from);
             lista = q.list();
         } catch (HibernateException e) {
-            
+
         } finally {
             cerrarOperacion();
         }
         return lista;
     }
-    
+
     /**
-     *READALL usando Criteria
+     * READ Max() de un campo de una clase usando Criteria
      */
-    public List readAllCriteria(Class clase) {
+    public Object readMaxValueCRITERIA(Class clase, String campo) {
+        ss = sf.openSession();
+        c = ss.createCriteria(clase).setProjection(Projections.max(campo));
+        return c.uniqueResult();
+    }
+
+    /**
+     * READALL usando Criteria
+     */
+    public List readAllCRITERIA(Class clase) {
         List lista = null;//comporbar si devuelve null o vacío en caso de qeu no haya registros
         try {
             ss = sf.openSession();
             c = ss.createCriteria(clase);
             lista = c.list();
         } catch (HibernateException e) {
-            
+
         } finally {
             cerrarOperacion();
         }

@@ -2,115 +2,174 @@ package vistas;
 
 import controladores.Crud;
 import controladores.Herramientas;
-import java.awt.Frame;
 import java.math.BigDecimal;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.table.DefaultTableModel;
-import modelos.Cliente;
 
+import javax.swing.table.DefaultTableModel;
+import modelos.Articulo;
+import modelos.Cliente;
 import modelos.Factura;
 
 public class FacturaJDialog extends javax.swing.JDialog {
 
-    Crud crud;
-    DefaultTableModel dtmFactura;
-    List<Factura> listaFacturas;
+    private Crud crud;
+
+    private DefaultTableModel dtmFactura;
+    private List<Factura> listaFacturas;
     private Factura facturaEnFoco;
-    private int rowSeleccionada;
+
+    private DefaultTableModel dtmLineaFactura;
 
     public FacturaJDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
+        this.crud = new Crud();
+        this.listaFacturas = crud.readAllHQL("from Factura f");
         initComponents();
         initConfiguracion();
     }
 
     private void initConfiguracion() {
-        this.crud = new Crud();
         this.dtmFactura = (DefaultTableModel) jtFactura.getModel();
+        this.dtmLineaFactura = (DefaultTableModel) jtLineaFactura.getModel();
         this.jtFactura.setCellSelectionEnabled(false);
+        this.jtLineaFactura.setCellSelectionEnabled(false);
         this.jtFactura.setRowSelectionAllowed(true);
-        actualizarTabla();
-
-        this.rowSeleccionada = jtFactura.getSelectedRow();
-
+        this.jtLineaFactura.setRowSelectionAllowed(true);
+        this.facturaEnFoco = null;
+        jtfNumeroFactura.setEditable(false);
+        actualizarTablaFacturas();
         this.jtFactura.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 if (e.getValueIsAdjusting()) {
-                    rowSeleccionada = jtFactura.getSelectedRow();
-                    Object pkRowSeleccionada = jtFactura.getValueAt(rowSeleccionada, 0);
-                    facturaEnFoco = listaFacturas.get(listaFacturas.indexOf(new Factura((BigDecimal) pkRowSeleccionada)));
-                    actualizarInputsTexto();
+                    facturaEnFoco = listaFacturas.get(jtFactura.getSelectedRow());
+                    actualizarInputsFacturas();
+                    actualizarTablaLineaFacturas();
+                }
+            }
+        });
+
+        this.jtLineaFactura.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (e.getValueIsAdjusting()) {
+                    actualizarInputsLineaFacturas();
                 }
             }
         });
     }
 
-    private void actualizarTabla() {
-        listaFacturas = (List<Factura>) crud.readAllCriteria(Factura.class);
-        Herramientas.limpiarTabla(dtmFactura);
-        for (Factura f : listaFacturas) {
-            dtmFactura.addRow(
-                    new Object[]{f.getNumFactura(), f.getCliente().getCodCliente(), Herramientas.sdf.format(f.getFechaFactura()), f.getListaArticulos().size()}
-            );
-        }
+    private void actualizarInputsFacturas() {
+        jtfNumeroFactura.setText(facturaEnFoco.getNumFactura().toString());
+        jtfCodigoCliente.setText(facturaEnFoco.getCliente().getCodCliente());
+        jtfFechaFactura.setText(new SimpleDateFormat("dd-MM-yyyy").format(facturaEnFoco.getFechaFactura()));
     }
 
-    private void actualizarInputsTexto() {
-        rowSeleccionada = jtFactura.getSelectedRow();
-        jtfNumero.setText(Herramientas.dfNumEntero.format(jtFactura.getValueAt(rowSeleccionada, 0)));
-        jtfCliente.setText((String) jtFactura.getValueAt(rowSeleccionada, 1));
-        jtfFecha.setText((String) jtFactura.getValueAt(rowSeleccionada, 2));
+    private void actualizarInputsLineaFacturas() {
+        jtfNumeroFacturaLinea.setText(jtLineaFactura.getValueAt(jtLineaFactura.getSelectedRow(), 0).toString());
+        jtfCodigoArticulo.setText((String) jtLineaFactura.getValueAt(jtLineaFactura.getSelectedRow(), 1));
+
+    }
+
+    private void actualizarTablaFacturas() {
+        Herramientas.limpiarTabla(dtmFactura);
+        for (Factura f : this.listaFacturas) {
+            dtmFactura.addRow(new Object[]{f.getNumFactura(), f.getCliente().getCodCliente(), f.getFechaFactura(), f.getListaArticulos().size()});
+        }
+        facturaEnFoco = null;
+        jtfNumeroFactura.setText("");
+        jtfCodigoCliente.setText("");
+        jtfFechaFactura.setText("");
+    }
+
+    private void actualizarTablaLineaFacturas() {
+        Herramientas.limpiarTabla(dtmLineaFactura);
+        if (facturaEnFoco != null) {
+            for (Articulo a : (Set<Articulo>) facturaEnFoco.getListaArticulos()) {
+                dtmLineaFactura.addRow(
+                        new Object[]{facturaEnFoco.getNumFactura(), a.getCodArticulo()});
+            }
+        }
+        jtfNumeroFacturaLinea.setText("");
+        jtfCodigoArticulo.setText("");
     }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jpFactura = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jtfNumero = new javax.swing.JTextField();
+        jtfNumeroFactura = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        jtfCodigoCliente = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        jtfCliente = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
-        jtfFecha = new javax.swing.JTextField();
-        jbCrear = new javax.swing.JButton();
-        jbModificar = new javax.swing.JButton();
-        jbBorrar = new javax.swing.JButton();
+        jtfFechaFactura = new javax.swing.JTextField();
+        jbCrearFactura = new javax.swing.JButton();
+        jbModificarFactura = new javax.swing.JButton();
+        jbBorrarFactura = new javax.swing.JButton();
+        jbActualizar = new javax.swing.JButton();
         jspFactura = new javax.swing.JScrollPane();
         jtFactura = new javax.swing.JTable();
-        jbGestionFactura = new javax.swing.JButton();
+        jpLineaFactura = new javax.swing.JPanel();
+        jLabel4 = new javax.swing.JLabel();
+        jtfNumeroFacturaLinea = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        jtfCodigoArticulo = new javax.swing.JTextField();
+        jbCrearLineaFactura = new javax.swing.JButton();
+        jbModificarLineaFactura = new javax.swing.JButton();
+        jbBorrarLineaFactura = new javax.swing.JButton();
+        jspLineaFactura = new javax.swing.JScrollPane();
+        jtLineaFactura = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Gestión de facturas");
+        setMaximumSize(new java.awt.Dimension(684, 664));
+        setMinimumSize(new java.awt.Dimension(684, 664));
+        setResizable(false);
+
+        jpFactura.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Factura", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 14))); // NOI18N
 
         jLabel1.setText("Número factura");
 
-        jLabel3.setText("Código cliente");
+        jLabel2.setText("Código cliente");
 
-        jLabel4.setText("Fecha factura");
+        jLabel3.setText("Fecha factura");
 
-        jbCrear.setText("Crear factura");
-        jbCrear.addActionListener(new java.awt.event.ActionListener() {
+        jbCrearFactura.setText("Crear familia");
+        jbCrearFactura.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jbCrearActionPerformed(evt);
+                jbCrearFacturaActionPerformed(evt);
             }
         });
 
-        jbModificar.setText("Modificar factura");
-        jbModificar.addActionListener(new java.awt.event.ActionListener() {
+        jbModificarFactura.setText("Modificar familia");
+        jbModificarFactura.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jbModificarActionPerformed(evt);
+                jbModificarFacturaActionPerformed(evt);
             }
         });
 
-        jbBorrar.setText("Eliminar factura");
-        jbBorrar.addActionListener(new java.awt.event.ActionListener() {
+        jbBorrarFactura.setText("Eliminar familia");
+        jbBorrarFactura.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jbBorrarActionPerformed(evt);
+                jbBorrarFacturaActionPerformed(evt);
+            }
+        });
+
+        jbActualizar.setText("Actualizar");
+        jbActualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbActualizarActionPerformed(evt);
             }
         });
 
@@ -119,7 +178,7 @@ public class FacturaJDialog extends javax.swing.JDialog {
 
             },
             new String [] {
-                "Número factura", "Código cliente", "Fecha factura", "Número de líneas"
+                "Número factura", "Código cliente", "Fecha factura", "Líneas de factura"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -133,14 +192,163 @@ public class FacturaJDialog extends javax.swing.JDialog {
         jtFactura.setColumnSelectionAllowed(true);
         jtFactura.getTableHeader().setReorderingAllowed(false);
         jspFactura.setViewportView(jtFactura);
-        jtFactura.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        jtFactura.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
 
-        jbGestionFactura.setText("Gestionar líneas factura");
-        jbGestionFactura.addActionListener(new java.awt.event.ActionListener() {
+        javax.swing.GroupLayout jpFacturaLayout = new javax.swing.GroupLayout(jpFactura);
+        jpFactura.setLayout(jpFacturaLayout);
+        jpFacturaLayout.setHorizontalGroup(
+            jpFacturaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jpFacturaLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jpFacturaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jpFacturaLayout.createSequentialGroup()
+                        .addComponent(jbCrearFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jbModificarFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jbBorrarFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jspFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 458, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jpFacturaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jtfNumeroFactura)
+                    .addGroup(jpFacturaLayout.createSequentialGroup()
+                        .addGroup(jpFacturaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 46, Short.MAX_VALUE))
+                    .addComponent(jtfCodigoCliente)
+                    .addComponent(jtfFechaFactura)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpFacturaLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jbActualizar, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+        );
+        jpFacturaLayout.setVerticalGroup(
+            jpFacturaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jpFacturaLayout.createSequentialGroup()
+                .addGroup(jpFacturaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jpFacturaLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jpFacturaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jbCrearFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jbModificarFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jbBorrarFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jbActualizar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jpFacturaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jpFacturaLayout.createSequentialGroup()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jtfNumeroFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jtfCodigoCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jtfFechaFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jspFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jpLineaFactura.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Líneas de la factura", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 14))); // NOI18N
+
+        jLabel4.setText("Número factura");
+
+        jLabel5.setText("Código artículo");
+
+        jbCrearLineaFactura.setText("Crear artículo");
+        jbCrearLineaFactura.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jbGestionFacturaActionPerformed(evt);
+                jbCrearLineaFacturaActionPerformed(evt);
             }
         });
+
+        jbModificarLineaFactura.setText("Modificar artículo");
+        jbModificarLineaFactura.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbModificarLineaFacturaActionPerformed(evt);
+            }
+        });
+
+        jbBorrarLineaFactura.setText("Eliminar artículo");
+        jbBorrarLineaFactura.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbBorrarLineaFacturaActionPerformed(evt);
+            }
+        });
+
+        jtLineaFactura.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Número factura", "Código artículo"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jtLineaFactura.setColumnSelectionAllowed(true);
+        jtLineaFactura.getTableHeader().setReorderingAllowed(false);
+        jspLineaFactura.setViewportView(jtLineaFactura);
+        jtLineaFactura.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+
+        javax.swing.GroupLayout jpLineaFacturaLayout = new javax.swing.GroupLayout(jpLineaFactura);
+        jpLineaFactura.setLayout(jpLineaFacturaLayout);
+        jpLineaFacturaLayout.setHorizontalGroup(
+            jpLineaFacturaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jpLineaFacturaLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jpLineaFacturaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jpLineaFacturaLayout.createSequentialGroup()
+                        .addComponent(jspLineaFactura, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addGroup(jpLineaFacturaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jtfNumeroFacturaLinea)
+                            .addComponent(jtfCodigoArticulo)
+                            .addGroup(jpLineaFacturaLayout.createSequentialGroup()
+                                .addGroup(jpLineaFacturaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(0, 52, Short.MAX_VALUE)))
+                        .addContainerGap())
+                    .addGroup(jpLineaFacturaLayout.createSequentialGroup()
+                        .addComponent(jbCrearLineaFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jbModificarLineaFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jbBorrarLineaFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))))
+        );
+        jpLineaFacturaLayout.setVerticalGroup(
+            jpLineaFacturaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jpLineaFacturaLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jpLineaFacturaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jbCrearLineaFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jbModificarLineaFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jbBorrarLineaFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jpLineaFacturaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpLineaFacturaLayout.createSequentialGroup()
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jtfNumeroFacturaLinea, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jtfCodigoArticulo, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jspLineaFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -148,137 +356,153 @@ public class FacturaJDialog extends javax.swing.JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jbCrear)
-                        .addGap(18, 18, 18)
-                        .addComponent(jbModificar)
-                        .addGap(18, 18, 18)
-                        .addComponent(jbBorrar)
-                        .addGap(18, 18, 18)
-                        .addComponent(jbGestionFactura))
-                    .addComponent(jspFactura))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jtfNumero, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel3)
-                    .addComponent(jtfCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4)
-                    .addComponent(jtfFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(19, Short.MAX_VALUE))
+                .addComponent(jpLineaFactura, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jpFactura, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addContainerGap()))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(84, 84, 84)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jtfNumero, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jtfCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jtfFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jspFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jbCrear, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jbModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jbBorrar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jbGestionFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(336, Short.MAX_VALUE)
+                .addComponent(jpLineaFactura, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jpFactura, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(336, Short.MAX_VALUE)))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jbCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbCrearActionPerformed
-        if (!jtfNumero.getText().isEmpty()) {
-            Factura facturas = null;
+    private void jbCrearFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbCrearFacturaActionPerformed
+        if (!jtfNumeroFactura.getText().isEmpty()) {
             try {
-                Cliente c = (Cliente) crud.read(Cliente.class, jtfCliente.getText());
-                if (c != null) {
-                    facturas = new Factura(
-                            Herramientas.stringABigDecimalNumEntero(jtfNumero.getText()),
-                            c,
-                            Herramientas.sdf.parse(jtfFecha.getText()),
-                            null
-                    );
-                }
-
-                if (facturas != null) {
-                    String error = "";
-                    error = crud.create(facturas);
-                    if (!error.isEmpty()) {
-                        JOptionPane.showMessageDialog(null, "No se pudo crear la factura."
-                                + "\nDescripción del error: " + error);
-                    } else {
-                        actualizarTabla();
-                    }
-                }
-            } catch (ParseException ex) {
-                JOptionPane.showMessageDialog(null, "El precio proporcionado no es válido.");
-            }
-        }
-    }//GEN-LAST:event_jbCrearActionPerformed
-
-    private void jbModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbModificarActionPerformed
-        if (!jtfNumero.getText().isEmpty()) {
-            try {
-                Factura facturas = new Factura(Herramientas.stringABigDecimalNumEntero(jtfNumero.getText()));
-                if (listaFacturas.contains(facturas)) {
-                    facturas.setFechaFactura(Herramientas.sdf.parse(jtfFecha.getText()));
-                    Cliente c = (Cliente) crud.read(Cliente.class, jtfCliente.getText());
-                    if (c != null) {
-                        facturas.setCliente(c);
-                        crud.update(facturas);
-                        actualizarTabla();
-                    } else {
-                        JOptionPane.showMessageDialog(null, "El cliente, al cual se pretende asociar la factura, no existe.");
-                    }
+                Factura factura = new Factura(
+                        BigDecimal.valueOf((long) crud.readMaxValueCRITERIA(Factura.class, "numFactura")),
+                        (Cliente) crud.read(Cliente.class, jtfCodigoCliente.getText()),
+                        new SimpleDateFormat("dd-MM-yyyy").parse(jtfFechaFactura.getText()),
+                        new HashSet(0)
+                );
+                String error = crud.create(factura);
+                if (!error.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "No se pudo crear la factura."
+                            + "\nDescripción del error: " + error);
                 } else {
-                    JOptionPane.showMessageDialog(null, "No existe una factura con ese número de factura.");
+                    actualizarTablaFacturas();
+                    actualizarTablaLineaFacturas();
                 }
             } catch (ParseException ex) {
-                JOptionPane.showMessageDialog(null, "El número de factura proporcionado no es válido.");
+                Logger.getLogger(FacturaJDialog.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-            JOptionPane.showMessageDialog(null, "Proporcione un número de factura para iniciar la modificación.");
+            JOptionPane.showMessageDialog(null, "Debe proporcionar un código de factura válido.");
         }
-    }//GEN-LAST:event_jbModificarActionPerformed
+    }//GEN-LAST:event_jbCrearFacturaActionPerformed
 
-    private void jbBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbBorrarActionPerformed
-        /*if (!jtfNumero.getText().isEmpty()) {
-            String error = crud.delete(new Articulos(jtfNumero.getText()));
-            if (!error.isEmpty()) {
-                JOptionPane.showMessageDialog(null, "No se pudo borrar el artículo."
-                    + "\nDescripción del error: " + error);
-            } else {
-                actualizarTabla();
+    private void jbModificarFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbModificarFacturaActionPerformed
+        if (!jtfNumeroFactura.getText().isEmpty()) {
+            try {
+                Factura factura = new Factura(
+                        BigDecimal.valueOf(Long.valueOf(jtfNumeroFactura.getText())),
+                        (Cliente) crud.read(Cliente.class, jtfCodigoCliente.getText()),
+                        new SimpleDateFormat("dd-MM-yyyy").parse(jtfFechaFactura.getText())
+                );
+                if (listaFacturas.contains(factura)) {
+                    crud.update(factura);
+                } else {
+                    int opcion = JOptionPane.showOptionDialog(null, "No existe una factura con ese código de factura."
+                            + " ¿Desea crearla?", "Crear", JOptionPane.YES_NO_CANCEL_OPTION,
+                            JOptionPane.QUESTION_MESSAGE, null, null, null);
+                    if (opcion == 0) {
+                        factura.setListaArticulos(new HashSet(0));
+                        crud.create(factura);
+                    }
+                }
+                actualizarTablaFacturas();
+                actualizarTablaLineaFacturas();
+            } catch (ParseException ex) {
+                Logger.getLogger(FacturaJDialog.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }*/
-    }//GEN-LAST:event_jbBorrarActionPerformed
-
-    private void jbGestionFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbGestionFacturaActionPerformed
-        if (facturaEnFoco != null) {
-            LineaFacturaJDialog lineasFacturaJDialog = new LineaFacturaJDialog((Frame) this.getParent(), true, facturaEnFoco);
-            lineasFacturaJDialog.setBounds(Herramientas.bondsDeDialogs(this, lineasFacturaJDialog));
-            lineasFacturaJDialog.setVisible(true);
         } else {
-            JOptionPane.showMessageDialog(null, "Marque una familia en la tabla sobre la que gestionar los artículos.");
+            JOptionPane.showMessageDialog(null, "Debe seleccione o escriba un código de factura para iniciar la modificación.");
         }
+    }//GEN-LAST:event_jbModificarFacturaActionPerformed
 
+    private void jbBorrarFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbBorrarFacturaActionPerformed
+        if (!jtfNumeroFactura.getText().isEmpty()) {
+            Factura factura = new Factura(BigDecimal.valueOf(Long.valueOf(jtfNumeroFactura.getText())));
+            crud.delete(factura);
+            actualizarTablaFacturas();
+            actualizarTablaLineaFacturas();
+        }
+    }//GEN-LAST:event_jbBorrarFacturaActionPerformed
 
-    }//GEN-LAST:event_jbGestionFacturaActionPerformed
+    private void jbActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbActualizarActionPerformed
+        actualizarTablaFacturas();
+    }//GEN-LAST:event_jbActualizarActionPerformed
+
+    private void jbCrearLineaFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbCrearLineaFacturaActionPerformed
+        if (!jtfCodigoArticulo.getText().isEmpty()) {
+            Articulo articulo = (Articulo) crud.read(Articulo.class, jtfCodigoArticulo.getText());
+            if (articulo != null) {
+                facturaEnFoco.addArticulo(articulo);
+                crud.update(facturaEnFoco);
+                actualizarTablaFacturas();
+                actualizarTablaLineaFacturas();
+            }
+        }
+    }//GEN-LAST:event_jbCrearLineaFacturaActionPerformed
+
+    private void jbModificarLineaFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbModificarLineaFacturaActionPerformed
+        if (!jtfCodigoArticulo.getText().isEmpty()) {
+            Articulo articulo = (Articulo) crud.read(Articulo.class, jtfCodigoArticulo.getText());
+            if (articulo != null) {
+                facturaEnFoco.replaceArticulo(articulo, articulo);
+                crud.update(facturaEnFoco);
+                actualizarTablaFacturas();
+                actualizarTablaLineaFacturas();
+            }
+        }
+    }//GEN-LAST:event_jbModificarLineaFacturaActionPerformed
+
+    private void jbBorrarLineaFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbBorrarLineaFacturaActionPerformed
+        if (!jtfCodigoArticulo.getText().isEmpty()) {
+            Articulo articulo = (Articulo) crud.read(Articulo.class, jtfCodigoArticulo.getText());
+            if (articulo != null) {
+                facturaEnFoco.removeArticulo(articulo);
+                crud.update(facturaEnFoco);
+                actualizarTablaFacturas();
+                actualizarTablaLineaFacturas();
+            }
+
+        }
+    }//GEN-LAST:event_jbBorrarLineaFacturaActionPerformed
 
     public static void main(String args[]) {
+
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(FacturaJDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(FacturaJDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(FacturaJDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(FacturaJDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 FacturaJDialog dialog = new FacturaJDialog(new javax.swing.JFrame(), true);
@@ -295,16 +519,27 @@ public class FacturaJDialog extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JButton jbBorrar;
-    private javax.swing.JButton jbCrear;
-    private javax.swing.JButton jbGestionFactura;
-    private javax.swing.JButton jbModificar;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JButton jbActualizar;
+    private javax.swing.JButton jbBorrarFactura;
+    private javax.swing.JButton jbBorrarLineaFactura;
+    private javax.swing.JButton jbCrearFactura;
+    private javax.swing.JButton jbCrearLineaFactura;
+    private javax.swing.JButton jbModificarFactura;
+    private javax.swing.JButton jbModificarLineaFactura;
+    private javax.swing.JPanel jpFactura;
+    private javax.swing.JPanel jpLineaFactura;
     private javax.swing.JScrollPane jspFactura;
+    private javax.swing.JScrollPane jspLineaFactura;
     private javax.swing.JTable jtFactura;
-    private javax.swing.JTextField jtfCliente;
-    private javax.swing.JTextField jtfFecha;
-    private javax.swing.JTextField jtfNumero;
+    private javax.swing.JTable jtLineaFactura;
+    private javax.swing.JTextField jtfCodigoArticulo;
+    private javax.swing.JTextField jtfCodigoCliente;
+    private javax.swing.JTextField jtfFechaFactura;
+    private javax.swing.JTextField jtfNumeroFactura;
+    private javax.swing.JTextField jtfNumeroFacturaLinea;
     // End of variables declaration//GEN-END:variables
 }
