@@ -2,16 +2,10 @@ package vistas;
 
 import controladores.Crud;
 import controladores.Herramientas;
-import java.math.BigDecimal;
-import java.sql.Date;
-import java.text.DecimalFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -71,7 +65,7 @@ public class FacturaJDialog extends javax.swing.JDialog {
     private void actualizarInputsFacturas() {
         jtfNumeroFactura.setText(facturaEnFoco.getNumfactura().toString());
         jtfCodigoCliente.setText(facturaEnFoco.getClientes().getCodcliente());
-        jtfFechaFactura.setText(new SimpleDateFormat("dd-MM-yyyy").format(facturaEnFoco.getFechafactura()));
+        jtfFechaFactura.setText(Herramientas.dateAStringFormateado(facturaEnFoco.getFechafactura()));
     }
 
     private void actualizarInputsLineaFacturas() {
@@ -84,7 +78,7 @@ public class FacturaJDialog extends javax.swing.JDialog {
         Herramientas.limpiarTabla(dtmFactura);
         this.listaFacturas = crud.readAllHQL("from Facturas f");
         for (Facturas f : this.listaFacturas) {
-            dtmFactura.addRow(new Object[]{f.getNumfactura(), f.getClientes().getCodcliente(), new SimpleDateFormat("dd-MM-yyyy").format(f.getFechafactura())});
+            dtmFactura.addRow(new Object[]{f.getNumfactura(), f.getClientes().getCodcliente(), Herramientas.dateAStringFormateado(f.getFechafactura())});
         }
         facturaEnFoco = null;
         jtfNumeroFactura.setText("");
@@ -374,33 +368,33 @@ public class FacturaJDialog extends javax.swing.JDialog {
     private void jbCrearFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbCrearFacturaActionPerformed
         //Compruebo que código de factura que pretendo crear no esté vacío
         if (jtfNumeroFactura.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Debe proporcionar un número de factura.");
+            JOptionPane.showMessageDialog(null, Herramientas.mensajes[0]);
             return;
         }
         //Creo la factura, a la que le asigno el número de factura
         Facturas factura;
         try {
-            factura = new Facturas(BigDecimal.valueOf(new DecimalFormat("0").parse(jtfNumeroFactura.getText()).longValue()));
+            factura = new Facturas(Herramientas.stringABigDecimalEntero(jtfNumeroFactura.getText()));
         } catch (ParseException ex) {
-            JOptionPane.showMessageDialog(null, "El número de factura proporcionado no tiene un formato válido.");
+            JOptionPane.showMessageDialog(null, Herramientas.mensajes[1]);
             return;
         }
         //Compruebo que no existiera previamente esa factura, para detener o no el proceso.
         if (listaFacturas.contains(factura)) {
-            JOptionPane.showMessageDialog(null, "No se puede crear la factura porque ya existe una factura con ese código.");
+            JOptionPane.showMessageDialog(null, Herramientas.mensajes[2]);
             return;
         }
         //Añado el resto de atributos
         Clientes cliente = (Clientes) crud.read(Clientes.class, jtfCodigoCliente.getText());
         if (cliente == null) {
-            JOptionPane.showMessageDialog(null, "El cliente proporcionado no existe.");
+            JOptionPane.showMessageDialog(null, Herramientas.mensajes[3]);
             return;
         }
         factura.setClientes(cliente);
         try {
-            factura.setFechafactura(new SimpleDateFormat("dd-MM-yyyy").parse(jtfFechaFactura.getText()));
+            factura.setFechafactura(Herramientas.stringADateFormateado(jtfFechaFactura.getText()));
         } catch (ParseException ex) {
-            JOptionPane.showMessageDialog(null, "El fecha de factura proporcionada no tiene un formato válido.");
+            JOptionPane.showMessageDialog(null, Herramientas.mensajes[4]);
             return;
         }
         //Los artículos de la factura, en este momento están vacíos
@@ -409,7 +403,7 @@ public class FacturaJDialog extends javax.swing.JDialog {
         String error = crud.create(factura);
         //Si "error" no está vacío, es que ha ocurrido un error al crear.
         if (!error.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "No se pudo crear la factura." + "\nDescripción del error: " + error);
+            JOptionPane.showMessageDialog(null, Herramientas.mensajes[5] + error);
             return;
         }
         //Si "error" está vacío, es que todo ha ido bien, así que actualizo las tablas de la vista
@@ -442,19 +436,19 @@ public class FacturaJDialog extends javax.swing.JDialog {
     private void jbModificarFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbModificarFacturaActionPerformed
         //Compruebo que número de factura que pretendo modificar no esté vacío
         if (jtfNumeroFactura.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Debe proporcionar un número de factura.");
+            JOptionPane.showMessageDialog(null, Herramientas.mensajes[0]);
             return;
         }
         //Compruebo que el código de factura proporcionado corresponda a una factura que ya exista
         int indexFactura = -1;
         try {
-            indexFactura = listaFacturas.indexOf(new Facturas((BigDecimal.valueOf(new DecimalFormat("0").parse(jtfNumeroFactura.getText()).longValue()))));
+            indexFactura = listaFacturas.indexOf(new Facturas(Herramientas.stringABigDecimalEntero(jtfNumeroFactura.getText())));
         } catch (ParseException ex) {
-            JOptionPane.showMessageDialog(null, "El número de factura proporcionado no tiene un formato válido.");
+            JOptionPane.showMessageDialog(null, Herramientas.mensajes[1]);
             return;
         }
         if (indexFactura == -1) {
-            JOptionPane.showMessageDialog(null, "La factura proporcionada no existe.");
+            JOptionPane.showMessageDialog(null, Herramientas.mensajes[6]);
             return;
         }
         ///Si la factura existe, la tomo en una variable de tránsito para trabajar más comodamente
@@ -463,21 +457,21 @@ public class FacturaJDialog extends javax.swing.JDialog {
         //Le modifico los campos oportunos (excepto la colección de artículos 'articuloses', eso no cambiará)
         Clientes cliente = (Clientes) crud.read(Clientes.class, jtfCodigoCliente.getText());
         if (cliente == null) {
-            JOptionPane.showMessageDialog(null, "El cliente proporcionado no existe.");
+            JOptionPane.showMessageDialog(null, Herramientas.mensajes[3]);
             return;
         }
         factura.setClientes(cliente);
         try {
-            factura.setFechafactura(new SimpleDateFormat("dd-MM-yyyy").parse(jtfFechaFactura.getText()));
+            factura.setFechafactura(Herramientas.stringADateFormateado(jtfFechaFactura.getText()));
         } catch (ParseException ex) {
-            JOptionPane.showMessageDialog(null, "El fecha de factura proporcionada no tiene un formato válido.");
+            JOptionPane.showMessageDialog(null, Herramientas.mensajes[4]);
             return;
         }
         //Actualizo la factura
         String error = crud.update(factura);
         //Si "error" no está vacío, es que ha ocurrido un error al modificar.
         if (!error.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "No se pudo modificar la factura." + "\nDescripción del error: " + error);
+            JOptionPane.showMessageDialog(null, Herramientas.mensajes[7] + error);
             return;
         }
         //Si "error" está vacío, es que todo ha ido bien, así que actualizo las tablas de la vista
@@ -518,14 +512,14 @@ public class FacturaJDialog extends javax.swing.JDialog {
         String error = "";
         try {
             //Intento borrar la factura con el código proporcionado
-            error = crud.delete(new Facturas((BigDecimal.valueOf(new DecimalFormat("0").parse(jtfNumeroFactura.getText()).longValue()))));
+            error = crud.delete(new Facturas((Herramientas.stringABigDecimalEntero(jtfNumeroFactura.getText()))));
         } catch (ParseException ex) {
-            JOptionPane.showMessageDialog(null, "El número de factura proporcionado no tiene un formato válido.");
+            JOptionPane.showMessageDialog(null, Herramientas.mensajes[1]);
             return;
         }
         //Si "error" no está vacío, es que ha ocurrido un error al borrar (probablemente la familia no exista)
         if (!error.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "No se pudo borrar la familia." + "\nDescripción del error: " + error);
+            JOptionPane.showMessageDialog(null, Herramientas.mensajes[8] + error);
             return;
         }
         //Si "error" está vacío, es que todo ha ido bien, así que actualizo las tablas de la vista
@@ -539,29 +533,29 @@ public class FacturaJDialog extends javax.swing.JDialog {
     private void jbCrearLineaFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbCrearLineaFacturaActionPerformed
         //Compruebo que el código de artículo y número de factura proporcionados no estén vacíos
         if (jtfCodigoArticuloLinea.getText().isEmpty() || jtfNumeroFacturaLinea.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Debe proporcionar un código de artículo y un número de factura.");
+            JOptionPane.showMessageDialog(null, Herramientas.mensajes[9]);
             return;
         }
         //Obtengo el artículo que usaré en la pk compuesta de la fila insertada
         Articulos articulo = (Articulos) crud.read(Articulos.class, jtfCodigoArticuloLinea.getText());
         if (articulo == null) {
-            JOptionPane.showMessageDialog(null, "No existe un artículo con el código proporcionado.");
+            JOptionPane.showMessageDialog(null, Herramientas.mensajes[10]);
             return;
         }
         //Obtengo la factura que usaré en la pk compuesta de la fila insertada
         Facturas factura;
         try {
-            factura = (Facturas) crud.read(Facturas.class, BigDecimal.valueOf(Long.valueOf(jtfNumeroFacturaLinea.getText())));
-        } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(null, "El número de factura proporcionado no tiene un formato válido.");
+            factura = (Facturas) crud.read(Facturas.class, Herramientas.stringABigDecimalEntero(jtfNumeroFacturaLinea.getText()));
+        } catch (ParseException ex) {
+            JOptionPane.showMessageDialog(null, Herramientas.mensajes[1]);
             return;
         }
         if (factura == null) {
-            JOptionPane.showMessageDialog(null, "No existe una factura con el número proporcionado.");
+            JOptionPane.showMessageDialog(null, Herramientas.mensajes[6]);
             return;
         }
         if (articulo.getFacturases().contains(factura)) {
-            JOptionPane.showMessageDialog(null, "Ya existe una línea con ese mismo artículo para la factura proporcionada");
+            JOptionPane.showMessageDialog(null, Herramientas.mensajes[11]);
             return;
         }
         //Añado el artículo a la factura, usando el méotodo 'add' personalizado, que también añade la factura al artículo.
@@ -570,7 +564,7 @@ public class FacturaJDialog extends javax.swing.JDialog {
         String error = crud.update(articulo);
         //Si "error" no está vacío, es que ha ocurrido un error al borrar (probablemente la familia no exista)
         if (!error.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "No se pudo crear la línea de factura." + "\nDescripción del error: " + error);
+            JOptionPane.showMessageDialog(null, Herramientas.mensajes[12] + error);
             return;
         }
         //Si "error" está vacío, es que todo ha ido bien, así que actualizo las tablas de la vista
@@ -581,29 +575,29 @@ public class FacturaJDialog extends javax.swing.JDialog {
     private void jbBorrarLineaFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbBorrarLineaFacturaActionPerformed
         //Compruebo que el código de artículo y número de factura proporcionados no estén vacíos
         if (jtfCodigoArticuloLinea.getText().isEmpty() || jtfNumeroFacturaLinea.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Debe proporcionar un código de artículo y un número de factura.");
+            JOptionPane.showMessageDialog(null, Herramientas.mensajes[9]);
             return;
         }
         //Obtengo el artículo que usaré en la pk compuesta de la fila insertada
         Articulos articulo = (Articulos) crud.read(Articulos.class, jtfCodigoArticuloLinea.getText());
         if (articulo == null) {
-            JOptionPane.showMessageDialog(null, "No existe un artículo con el código proporcionado.");
+            JOptionPane.showMessageDialog(null, Herramientas.mensajes[10]);
             return;
         }
         //Obtengo la factura que usaré en la pk compuesta de la fila insertada
         Facturas factura;
         try {
-            factura = (Facturas) crud.read(Facturas.class, BigDecimal.valueOf(Long.valueOf(jtfNumeroFacturaLinea.getText())));
-        } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(null, "El número de factura proporcionado no tiene un formato válido.");
+            factura = (Facturas) crud.read(Facturas.class, Herramientas.stringABigDecimalEntero(jtfNumeroFacturaLinea.getText()));
+        } catch (ParseException ex) {
+            JOptionPane.showMessageDialog(null, Herramientas.mensajes[1]);
             return;
         }
         if (factura == null) {
-            JOptionPane.showMessageDialog(null, "No existe una factura con el número proporcionado.");
+            JOptionPane.showMessageDialog(null, Herramientas.mensajes[6]);
             return;
         }
         if (!articulo.getFacturases().contains(factura)) {
-            JOptionPane.showMessageDialog(null, "No existe una línea con ese artículo para la factura proporcionada");
+            JOptionPane.showMessageDialog(null, Herramientas.mensajes[13]);
             return;
         }
         //Borro el artículo a la factura, usando el méotodo 'remove' personalizado, que también borra la factura del artículo.
@@ -612,7 +606,7 @@ public class FacturaJDialog extends javax.swing.JDialog {
         String error = crud.update(factura);
         //Si "error" no está vacío, es que ha ocurrido un error al borrar (probablemente la familia no exista)
         if (!error.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "No se pudo borrar la línea de factura." + "\nDescripción del error: " + error);
+            JOptionPane.showMessageDialog(null, Herramientas.mensajes[13] + error);
             return;
         }
         //Si "error" está vacío, es que todo ha ido bien, así que actualizo las tablas de la vista

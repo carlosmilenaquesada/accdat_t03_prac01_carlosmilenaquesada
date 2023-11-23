@@ -6,11 +6,8 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -551,7 +548,7 @@ public class FamiliaJDialog extends javax.swing.JDialog {
         //Creo el artículo nuevo con todos sus campos. En este momento, al ser artículo nuevo, no tiene ninguna factura.
         Articulos articulo;
         try {
-            articulo = new Articulos(jtfCodigoArticulo.getText(), familia, jtfNombreArticulo.getText(), BigDecimal.valueOf(new DecimalFormat("0.00").parse(jtfPrecioArticulo.getText()).doubleValue()), new HashSet(0));
+            articulo = new Articulos(jtfCodigoArticulo.getText(), familia, jtfNombreArticulo.getText(), Herramientas.stringABigDecimalPrecio(jtfPrecioArticulo.getText()), new HashSet(0));
         } catch (ParseException ex) {
             JOptionPane.showMessageDialog(null, "El precio proporcionado no tiene un formato válido.");
             return;
@@ -607,7 +604,7 @@ public class FamiliaJDialog extends javax.swing.JDialog {
         Articulos articulo = new Articulos(jtfCodigoArticulo.getText());
         try {
             //Asigno el nuevo valor de precio
-            articulo.setPrecioarticulo(BigDecimal.valueOf(new DecimalFormat("0.00").parse(jtfPrecioArticulo.getText()).doubleValue()));
+            articulo.setPrecioarticulo(Herramientas.stringABigDecimalPrecio(jtfPrecioArticulo.getText()));
         } catch (ParseException ex) {
             JOptionPane.showMessageDialog(null, "El precio proporcionado no tiene un formato válido.");
             return;
