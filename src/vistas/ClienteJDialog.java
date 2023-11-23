@@ -47,7 +47,7 @@ public class ClienteJDialog extends javax.swing.JDialog {
     }
 
     private void actualizarTabla() {
-        listaClientes = crud.readAllHQL("from Cliente c");
+        listaClientes = crud.readAllHQL("from Clientes c");
         Herramientas.limpiarTabla(dtmCliente);
         for (Clientes c : this.listaClientes) {
             dtmCliente.addRow(new Object[]{c.getCodcliente(), c.getNomcliente(), c.getDomiciliocli()});

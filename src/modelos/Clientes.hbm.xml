@@ -15,7 +15,7 @@
             <column name="DOMICILIOCLI" length="100" />
         </property>
         <!--<set name="facturases" table="FACTURAS" inverse="true" lazy="true" fetch="select">-->
-        <set name="facturases" table="FACTURAS"  inverse="false" lazy="false" cascade="all" fetch="join">
+        <set name="facturases" table="FACTURAS"  inverse="true" lazy="false" cascade="all" fetch="join">
             <key>
                 <column name="CODCLIENTE" length="20" />
             </key>

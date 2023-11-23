@@ -16,7 +16,7 @@
         </property>
         <!--ESCLAVO
         <set name="articuloses" table="FACT_ART" inverse="false" lazy="true" fetch="select">-->
-        <set name="articuloses" table="FACT_ART" inverse="false" lazy="false" fetch="join" cascade="all">       
+        <set name="articuloses" table="FACT_ART" inverse="true" lazy="false" fetch="join" cascade="all">       
             <key>
                 <column name="NUMFACTURA" precision="20" scale="0" not-null="true" />
             </key>

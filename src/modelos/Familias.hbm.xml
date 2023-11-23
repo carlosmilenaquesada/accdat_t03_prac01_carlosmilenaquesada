@@ -15,7 +15,7 @@
             <column name="DESCFAMILIA" length="100" />
         </property>
         <!--<set name="articuloses" table="ARTICULOS" inverse="true" lazy="true" fetch="select">-->
-        <set name="articuloses" table="ARTICULOS" inverse="false" lazy="false" cascade="all" fetch="join">
+        <set name="articuloses" table="ARTICULOS" inverse="true" lazy="false" cascade="all" fetch="join">
             <key>
                 <column name="CODFAMILIA" length="20" />
             </key>
