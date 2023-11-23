@@ -61,6 +61,7 @@ public class Clientes implements java.io.Serializable {
         this.facturases = facturases;
     }
 
+    //--------------------------------------------------------------------------
     //Métodos generados por mí
     @Override
     public int hashCode() {
@@ -87,6 +88,9 @@ public class Clientes implements java.io.Serializable {
         return true;
     }
 
+    @Override
+    public String toString() {
+        return getCodcliente();
+    }
     //--------------------------------------------------------------------------
-   
 }

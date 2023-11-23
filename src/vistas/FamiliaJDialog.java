@@ -2,8 +2,6 @@ package vistas;
 
 import controladores.Crud;
 import controladores.Herramientas;
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.HashSet;
 import java.util.List;
@@ -428,27 +426,6 @@ public class FamiliaJDialog extends javax.swing.JDialog {
         }
         //Si "error" está vacío, es que todo ha ido bien, así que actualizo las tablas de la vista
         actualizarTablas();
-
-
-        /*if (!jtfCodigoFamilia.getText().isEmpty()) {
-            Familias familia = new Familias(jtfCodigoFamilia.getText());
-            if (listaFamilias.contains(familia)) {
-                JOptionPane.showMessageDialog(null, "No se puede crear la familia porque ya existe una familia con ese código.");
-            } else {
-                familia.setNomfamilia(jtfNombreFamilia.getText());
-                familia.setDescfamilia(jtfDescripcionFamilia.getText());
-                familia.setArticuloses(new HashSet(0));
-                String error = crud.create(familia);
-                if (!error.isEmpty()) {
-                    JOptionPane.showMessageDialog(null, "No se pudo crear la familia."
-                            + "\nDescripción del error: " + error);
-                } else {
-                    actualizarTablas();
-                }
-            }
-        } else {
-            JOptionPane.showMessageDialog(null, "Debe proporcionar un código de familia.");
-        }*/
     }//GEN-LAST:event_jbCrearFamiliaActionPerformed
 
     private void jbModificarFamiliaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbModificarFamiliaActionPerformed
@@ -478,26 +455,6 @@ public class FamiliaJDialog extends javax.swing.JDialog {
         }
         //Si "error" está vacío, es que todo ha ido bien, así que actualizo las tablas de la vista
         actualizarTablas();
-
-
-        /*if (!jtfCodigoFamilia.getText().isEmpty()) {
-            Familias familia = new Familias(jtfCodigoFamilia.getText());
-            if (listaFamilias.contains(familia)) {
-                familia.setNomfamilia(jtfNombreFamilia.getText());
-                familia.setDescfamilia(jtfDescripcionFamilia.getText());
-                String error = crud.update(familia);
-                if (!error.isEmpty()) {
-                    JOptionPane.showMessageDialog(null, "No se pudo actualizar la familia."
-                            + "\nDescripción del error: " + error);
-                } else {
-                    actualizarTablas();
-                }
-            } else {
-                JOptionPane.showMessageDialog(null, "No existe un artículo en la lista con el código proporcionado.");
-            }
-        } else {
-            JOptionPane.showMessageDialog(null, "Debe proporcionar un código de artículo.");
-        }*/
     }//GEN-LAST:event_jbModificarFamiliaActionPerformed
 
     private void jbBorrarFamiliaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbBorrarFamiliaActionPerformed
@@ -509,20 +466,7 @@ public class FamiliaJDialog extends javax.swing.JDialog {
             return;
         }
         //Si "error" está vacío, es que todo ha ido bien, así que actualizo las tablas de la vista
-        actualizarTablas();
-        /*if (!jtfCodigoFamilia.getText().isEmpty()) {
-            Familias familia = new Familias(jtfCodigoFamilia.getText());
-            String error = crud.delete(familia);
-            if (!error.isEmpty()) {
-                JOptionPane.showMessageDialog(null, "No se pudo borrar la familia."
-                        + "\nDescripción del error: " + error);
-            } else {
-                actualizarTablas();
-            }
-        } else {
-            JOptionPane.showMessageDialog(null, "Debe proporcionar un código de familia.");
-        }*/
-
+        actualizarTablas();       
     }//GEN-LAST:event_jbBorrarFamiliaActionPerformed
 
     private void jbActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbActualizarActionPerformed
@@ -563,35 +507,6 @@ public class FamiliaJDialog extends javax.swing.JDialog {
         }
         //Si "error" está vacío, es que todo ha ido bien, así que actualizo las tablas de la vista
         actualizarTablas();
-
-        /*if (!jtfCodigoArticulo.getText().isEmpty()) {
-            Articulos articulo = (Articulos) crud.read(Articulos.class, jtfCodigoArticulo.getText());
-            if (articulo != null) {
-                JOptionPane.showMessageDialog(null, "No se puede crear el artículo porque ya existe un artículo con ese código.");
-            } else {
-                try {
-                    Familias f = (Familias) crud.read(Familias.class, jtfFamiliaArticulo.getText());
-                    if (f != null) {
-                        articulo = new Articulos(jtfCodigoArticulo.getText(), f, jtfNombreArticulo.getText(), BigDecimal.valueOf(new DecimalFormat("0.00").parse(jtfPrecioArticulo.getText()).doubleValue()), new HashSet(0));
-                        f.getArticuloses().add(articulo);
-                        String error = crud.update(f);
-                        if (!error.isEmpty()) {
-                            JOptionPane.showMessageDialog(null, "No se pudo crear el artículo."
-                                    + "\nDescripción del error: " + error);
-                        } else {
-                            actualizarTablas();
-                        }
-                    } else {
-                        JOptionPane.showMessageDialog(null, "La familia proporcionada no es válida.");
-                    }
-
-                } catch (ParseException ex) {
-                    JOptionPane.showMessageDialog(null, "El precio proporcionado no es válido.");
-                }
-            }
-        } else {
-            JOptionPane.showMessageDialog(null, "Debe proporcionar un código de cliente.");
-        }*/
     }//GEN-LAST:event_jbCrearArticuloActionPerformed
 
     private void jbModificarArticuloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbModificarArticuloActionPerformed
@@ -628,44 +543,6 @@ public class FamiliaJDialog extends javax.swing.JDialog {
         }
         //Si "error" está vacío, es que todo ha ido bien, así que actualizo las tablas de la vista
         actualizarTablas();
-
-
-        /*
-//Tomo el código del artículo que pretendo modificar
-        if (!jtfCodigoArticulo.getText().isEmpty()) {
-            //Creo un artículo auxiliar con ese código
-            Articulos articulo = new Articulos(jtfCodigoArticulo.getText());
-            try {
-                //Asigno el nuevo valor de precio (si el precio proporcionado no cumple, la excepción detiene el proceso)
-                articulo.setPrecioarticulo(BigDecimal.valueOf((Double) new DecimalFormat("0.00").parse(jtfPrecioArticulo.getText())));
-                //Creo una familia auxiliar con el código de familia proporcionado, y compruebo que exista en la lista de familias inicialmente cargada (que contiene todas las familias)
-                Familias familia = new Familias(jtfFamiliaArticulo.getText());
-                int indexFamilia = listaFamilias.indexOf(familia);
-                if (indexFamilia != -1) {
-                    //Si la familia existe, se la asigno al nuevo valor de familia del artículo , apoyándome en el index conseguido en el paso anterior
-                    articulo.setFamilias(listaFamilias.get(indexFamilia));
-                    //Asigno el nuevo nombre al artículo
-                    articulo.setNomarticulo(jtfNombreArticulo.getText());
-                    //Actualizo el artículo
-                    String error = crud.update(articulo);
-                    //Si "error" no está vacío, es que ha ocurrido un error al borrar (probablemente el artículo no exista)
-                    if (!error.isEmpty()) {
-                        JOptionPane.showMessageDialog(null, "No se pudo actualizar el artículo."
-                                + "\nDescripción del error: " + error);
-                    } else {
-                        //Si "error" está vacío, es que todo ha ido bien, así que actualizo las tablas de la vista
-                        actualizarTablas();
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(null, "La familia proporcionada no es válida.");
-                }
-            } catch (ParseException ex) {
-                JOptionPane.showMessageDialog(null, "El precio proporcionado no es válido.");
-            }
-
-        } else {
-            JOptionPane.showMessageDialog(null, "Debe proporcionar un código de artículo.");
-        }*/
     }//GEN-LAST:event_jbModificarArticuloActionPerformed
 
     private void jbBorrarArticuloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbBorrarArticuloActionPerformed
@@ -678,24 +555,6 @@ public class FamiliaJDialog extends javax.swing.JDialog {
         }
         //Si "error" está vacío, es que todo ha ido bien, así que actualizo las tablas de la vista
         actualizarTablas();
-
-        /*//Tomo el código del artículo que pretendo borrar
-        if (!jtfCodigoArticulo.getText().isEmpty()) {
-            //Creo un artículo auxiliar con ese código
-            Articulos articulo = new Articulos(jtfCodigoArticulo.getText());
-            
-            String error = crud.delete(articulo);
-           
-            if (!error.isEmpty()) {
-                JOptionPane.showMessageDialog(null, "No se pudo borrar el artículo."
-                        + "\nDescripción del error: " + error);
-            } else {
-                //Si "error" está vacío, es que todo ha ido bien, así que actualizo las tablas de la vista
-                actualizarTablas();
-            }
-        } else {
-            JOptionPane.showMessageDialog(null, "Debe proporcionar un código de artículo para borrar.");
-        }*/
     }//GEN-LAST:event_jbBorrarArticuloActionPerformed
 
     public static void main(String args[]) {

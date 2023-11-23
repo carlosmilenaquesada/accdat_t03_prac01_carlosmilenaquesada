@@ -8,42 +8,9 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.criterion.Projections;
 
 public class Crud {
 
-    /*
-    
-    //Critera vs HQL
-SessionFactory sf = NewHibernateUtil.getSessionFactory();
-        Session ss = sf.openSession();
-        
-        //SON DOS FORMAS DE CONSULTAR LOS REGISTROS DE UNA TABLA, CON CONDICIONES, ORDEN, ETCL.
-        //ES DECIR, OBTENER UNA OLEECIÓN DE OBJTOS DE UNA TABLA. EL HQL TAMBIÉN PUEDE IMPLEMENTAR
-        //EL JOIN. EN CRITERIA LA CLASE OBTENIDA SIEMPRE ES UNA, EN HQL PODEMOS OBTNERE DIFERENTES
-        //CAMPOS DE CADA UNA DE LAS TABLAS DE UNA CONSULTA.
-        //Criteria  -> SELECT * FROM UnaTabla WHERE ... ORDER...
-        //HQL       -> SELECT * FROM UnaTabla WHERE ... ORDER...
-        //HQL       -> SELECT * FROM UnaTabla JOIN OtraTabla
-        //HQL teiene método prepareStatement, pero pepe no lo pide
-        try {
-            //ejemplo criteria.
-            Criteria c = ss.createCriteria(Clientes.class)//equivalente a select * from clientes.
-                    .addOrder(Order.asc("nombreclientes"));//restricciónes aplicadas al criteria (en este caso, un order)
-            List<Clientes> lista = c.list();
-            for (Clientes cli : lista) {
-                System.out.println(cli);
-            }
-
-            //ejemplo de HQL
-            Query q = ss.createQuery("from Clientes c order by c.nombreclientes");//equivalente a select * from clieentes order by nombre cliente (igual sentencia que la que hemos hecho el criteria).(no olvidar el alias)
-        } catch (HibernateException he) {
-            System.out.println(he.getMessage());
-        }
-
-        //LOS DELETE, INSERT y UPDATE SE HACEN DESDE EL SESSIÓN
-    }
-     */
     private SessionFactory sf = NewHibernateUtil.getSessionFactory();
     private Session ss = null;
     private Transaction tx = null;
@@ -63,10 +30,20 @@ SessionFactory sf = NewHibernateUtil.getSessionFactory();
             ss.close();
         }
     }
+    //Ya que es requisito fundamental que las clases POJO que representan las
+    //entidades de la base de datos implementen Serializable, me voy a apoyar
+    //en esa misma interfaz para pedir los parámetros en las funciones.
 
-    //Update, create, delete----------------------------------------------------
+    //CREATE, UPDATE, DELETE----------------------------------------------------
     /**
      * CREATE
+     *
+     * @param s El objeto que se pretende crear en la BD. Debe implementar
+     * Serializable.
+     * @return Un {@code String} que será vacío si todo ha ido bien (isEmpty ==
+     * true). En caso contrario, devuelve un {@code String} con el texto "Error
+     * al crear + [nombre de la clase] + [toString del objeto que se intentó
+     * crear]".
      */
     public String create(Serializable s) {//OK
         String error = "";
@@ -75,7 +52,7 @@ SessionFactory sf = NewHibernateUtil.getSessionFactory();
             ss.save(s);
             tx.commit();
         } catch (HibernateException e) {
-            error = e.getCause().getMessage();
+            error = "Error al crear " + s.getClass() + " -> " + s.toString();
             tx.rollback();
         } finally {
             cerrarOperacion();
@@ -85,6 +62,13 @@ SessionFactory sf = NewHibernateUtil.getSessionFactory();
 
     /**
      * UPDATE
+     *
+     * @param s El objeto que se pretende actualizar en la BD. Debe implementar
+     * Serializable.
+     * @return Un {@code String} que será vacío si todo ha ido bien (isEmpty ==
+     * true). En caso contrario, devuelve un {@code String} con el texto "Error
+     * al actualizar + [nombre de la clase] + [toString del objeto que se
+     * intentó actualizar]".
      */
     public String update(Serializable s) {
         String error = "";
@@ -93,7 +77,7 @@ SessionFactory sf = NewHibernateUtil.getSessionFactory();
             ss.update(s);
             tx.commit();
         } catch (HibernateException e) {
-            error = e.getCause().getMessage();
+            error = "Error al actualizar " + s.getClass() + " -> " + s.toString();
             tx.rollback();
         } finally {
             cerrarOperacion();
@@ -103,6 +87,13 @@ SessionFactory sf = NewHibernateUtil.getSessionFactory();
 
     /**
      * DELETE
+     *
+     * @param s El objeto que se pretende borrar de la BD. Debe implementar
+     * Serializable.
+     * @return Un {@code String} que será vacío si todo ha ido bien (isEmpty ==
+     * true). En caso contrario, devuelve un {@code String} con el texto "Error
+     * al eliminar + [nombre de la clase] + [toString del objeto que se intentó
+     * borrar]".
      */
     public String delete(Serializable s) {
         String error = "";
@@ -111,7 +102,7 @@ SessionFactory sf = NewHibernateUtil.getSessionFactory();
             ss.delete(s);
             tx.commit();
         } catch (HibernateException e) {
-            error = e.getCause().getMessage();
+            error = "Error al eliminar " + s.getClass() + " -> " + s.toString();
             tx.rollback();
         } finally {
             cerrarOperacion();
@@ -122,6 +113,11 @@ SessionFactory sf = NewHibernateUtil.getSessionFactory();
     //Lecturas -----------------------------------------------------------------
     /**
      * READ
+     *
+     * @param c La clase sobre la que se realiza la lectura.
+     * @param pk La clave primaria del objeto que se pretende leer.
+     * @return El objeto leído. En caso de no poder realizar la lectura, se
+     * devuelve null.
      */
     public Object read(Class c, Serializable pk) {
         Object o;
@@ -138,9 +134,16 @@ SessionFactory sf = NewHibernateUtil.getSessionFactory();
 
     /**
      * READALL usando HQL Query
+     *
+     * @param from La sentencia HQL sobre la que se realizará la lectura,
+     * haciendo referencia a la entidad de la base de datos (p.e: "from Familias
+     * f").
+     * @return Una lista {@code List} con todos los registros de la entidad
+     * referida. En caso de no existir la entidad o haber sido imposible la
+     * lectura, se devuelve null.
      */
     public List readAllHQL(String from) {
-        List lista;//comporbar si devuelve null o vacío en caso de qeu no haya registros
+        List lista;
         try {
             ss = sf.openSession();
             q = ss.createQuery(from);
@@ -154,25 +157,16 @@ SessionFactory sf = NewHibernateUtil.getSessionFactory();
     }
 
     /**
-     * READ Max() de un campo de una clase usando Criteria
-     */
-    public Object readMaxValueCRITERIA(Class clase, String campo) {
-        Object o;
-        try {
-            ss = sf.openSession();
-            c = ss.createCriteria(clase).setProjection(Projections.max(campo));
-            o = c.uniqueResult();
-        } catch (HibernateException e) {
-            o = null;
-        }
-        return o;
-    }
-
-    /**
      * READALL usando Criteria
+     *
+     * @param clase La clase sobre la que se realizará la lectura, haciendo
+     * referencia a la entidad de la base de datos (p.e: Familias.class).
+     * @return Una lista {@code List} con todos los registros de la entidad
+     * referida. En caso de no existir la entidad o haber sido imposible la
+     * lectura, se devuelve null.
      */
     public List readAllCRITERIA(Class clase) {
-        List lista;//comporbar si devuelve null o vacío en caso de qeu no haya registros
+        List lista;
         try {
             ss = sf.openSession();
             c = ss.createCriteria(clase);

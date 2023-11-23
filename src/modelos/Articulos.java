@@ -71,7 +71,8 @@ public class Articulos implements java.io.Serializable {
     public void setFacturases(Set facturases) {
         this.facturases = facturases;
     }
-
+    
+    //--------------------------------------------------------------------------
     //Métodos generados por mí
     //Maestro
     public void addFactura(Facturas factura) {
@@ -107,5 +108,9 @@ public class Articulos implements java.io.Serializable {
         return true;
     }
 
+    @Override
+    public String toString() {
+        return getCodarticulo();
+    }
     //--------------------------------------------------------------------------
 }

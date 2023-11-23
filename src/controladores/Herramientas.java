@@ -31,13 +31,13 @@ public class Herramientas {
         return BigDecimal.valueOf(DECIMAL_FORMAT_PRECIO.parse(numeroEnTexto).doubleValue());
     }
 
-    private static final DecimalFormat DECIMAL_FORMAT_ENTERO = new DecimalFormat("0.00");
+    private static final DecimalFormat DECIMAL_FORMAT_ENTERO = new DecimalFormat("0");
 
     public static BigDecimal stringABigDecimalEntero(String numeroEnTexto) throws ParseException {
         if (!numeroEnTexto.matches("^[0-9]+$")) {
             throw new ParseException("", 0);
         }
-        return BigDecimal.valueOf(DECIMAL_FORMAT_ENTERO.parse(numeroEnTexto).doubleValue());
+        return BigDecimal.valueOf(DECIMAL_FORMAT_ENTERO.parse(numeroEnTexto).longValue());
     }
 
     private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy");

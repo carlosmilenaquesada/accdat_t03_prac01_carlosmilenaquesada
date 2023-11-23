@@ -196,52 +196,68 @@ public class ClienteJDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_jbActualizarTablaActionPerformed
 
     private void jbCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbCrearActionPerformed
-        if (!jtfCodigo.getText().isEmpty()) {
-            Clientes clientes = new Clientes(jtfCodigo.getText(), jtfNombre.getText(), jtfDomicilio.getText(), new HashSet(0));
-            String error = crud.create(clientes);
-            if (!error.isEmpty()) {
-                JOptionPane.showMessageDialog(null, "No se pudo crear el cliente."
-                        + "\nDescripción del error: " + error);
-            } else {
-                actualizarTabla();
-            }
-        } else {
+        //Compruebo que código de cliente que pretendo crear no esté vacío
+        if (jtfCodigo.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Debe proporcionar un código de cliente.");
+            return;
         }
+        //Creo un nuevo cliente con los datos proporcionados. Al principio, el cliente nuevo no tiene facturas.
+        Clientes clientes = new Clientes(jtfCodigo.getText(), jtfNombre.getText(), jtfDomicilio.getText(), new HashSet(0));
+        //Inicio la creación
+        String error = crud.create(clientes);
+        //Si "error" no está vacío, es que ha ocurrido un error al crear.
+        if (!error.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "No se pudo crear el cliente." + "\nDescripción del error: " + error);
+            return;
+        }
+        //Si "error" está vacío, es que todo ha ido bien, así que actualizo las tablas de la vista
+        actualizarTabla();
+
     }//GEN-LAST:event_jbCrearActionPerformed
 
     private void jbModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbModificarActionPerformed
-        if (!jtfCodigo.getText().isEmpty()) {
-            Clientes clientes = new Clientes(jtfCodigo.getText());
-            if (listaClientes.contains(clientes)) {
-                clientes.setNomcliente(jtfNombre.getText());
-                clientes.setDomiciliocli(jtfDomicilio.getText());
-                String error = crud.update(clientes);
-                if (!error.isEmpty()) {
-                    JOptionPane.showMessageDialog(null, "No se pudo actualizar el cliente."
-                            + "\nDescripción del error: " + error);
-                } else {
-                    actualizarTabla();
-                }
-            }
-        } else {
+        //Compruebo que código de cliente que pretendo modificar no esté vacío
+        if (jtfCodigo.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Debe proporcionar un código de cliente.");
+            return;
         }
+        //Creo un objeto cliente con el código de cliente proporcionado
+        Clientes clientes = new Clientes(jtfCodigo.getText());
+        //Si la listaClientes (que contiene todos los clientes del sistema) ya contiene un cliente con ese código (equals) detengo el proceso.
+        if (!listaClientes.contains(clientes)) {
+            return;
+        }
+        //Añado el resto de atributos al cliente, excepto la colección de facturas, que se queda como estaba al principio (las facturas se modifican/crean/borran en la pestaña de Facturas)
+        clientes.setNomcliente(jtfNombre.getText());
+        clientes.setDomiciliocli(jtfDomicilio.getText());
+        //Inicio la actualización del cliente
+        String error = crud.update(clientes);
+        //Si "error" no está vacío, es que ha ocurrido un error al crear.
+        if (!error.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "No se pudo actualizar el cliente." + "\nDescripción del error: " + error);
+            return;
+        }
+        //Si "error" está vacío, es que todo ha ido bien, así que actualizo las tablas de la vista
+        actualizarTabla();
+
+
     }//GEN-LAST:event_jbModificarActionPerformed
 
     private void jbBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbBorrarActionPerformed
-        if (!jtfCodigo.getText().isEmpty()) {
-            Clientes clientes = new Clientes(jtfCodigo.getText());
-            String error = crud.delete(clientes);
-            if (!error.isEmpty()) {
-                JOptionPane.showMessageDialog(null, "No se pudo borrar el cliente."
-                        + "\nDescripción del error: " + error);
-            } else {
-                actualizarTabla();
-            }
-        } else {
+        //Compruebo que código de cliente que pretendo borrar no esté vacío
+        if (jtfCodigo.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Debe proporcionar un código de cliente.");
+            return;
         }
+        //Inicio el borrado del cliente con ese código
+        String error = crud.delete(new Clientes(jtfCodigo.getText()));
+        //Si "error" no está vacío, es que ha ocurrido un error al crear.
+        if (!error.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "No se pudo borrar el cliente." + "\nDescripción del error: " + error);
+            return;
+        }
+        //Si "error" está vacío, es que todo ha ido bien, así que actualizo las tablas de la vista
+        actualizarTabla();
     }//GEN-LAST:event_jbBorrarActionPerformed
 
     /**

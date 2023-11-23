@@ -62,19 +62,19 @@ public class Facturas implements java.io.Serializable {
     public void setArticuloses(Set articuloses) {
         this.articuloses = articuloses;
     }
-
+    //--------------------------------------------------------------------------
     //Métodos generados por mí
     //Esclavo
-    public void addArticulo(Articulos articulo){
+    public void addArticulo(Articulos articulo) {
         this.getArticuloses().add(articulo);
         articulo.addFactura(this);
     }
-    
-    public void removeArticulo(Articulos articulo){
+
+    public void removeArticulo(Articulos articulo) {
         this.getArticuloses().remove(articulo);
         articulo.removeFactura(this);
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 7;
@@ -99,5 +99,10 @@ public class Facturas implements java.io.Serializable {
         }
         return true;
     }
-    //--------------------------------------------------------------------------s
+
+    @Override
+    public String toString() {
+        return getNumfactura().toString();
+    }
+    //--------------------------------------------------------------------------
 }

@@ -408,29 +408,6 @@ public class FacturaJDialog extends javax.swing.JDialog {
         }
         //Si "error" está vacío, es que todo ha ido bien, así que actualizo las tablas de la vista
         actualizarTablas();
-
-        /*  if (!jtfNumeroFactura.getText().isEmpty()) {
-            try {
-                Facturas factura = new Facturas(
-                        ((BigDecimal) crud.readMaxValueCRITERIA(Facturas.class, "numFactura")).add(BigDecimal.ONE),
-                        (Clientes) crud.read(Clientes.class, jtfCodigoCliente.getText()),
-                        new SimpleDateFormat("dd-MM-yyyy").parse(jtfFechaFactura.getText()),
-                        new HashSet(0)
-                );
-                String error = crud.create(factura);
-                if (!error.isEmpty()) {
-                    JOptionPane.showMessageDialog(null, "No se pudo crear la factura."
-                            + "\nDescripción del error: " + error);
-                } else {
-                    actualizarTablas();
-                    actualizarTablaLineaFacturas();
-                }
-            } catch (ParseException ex) {
-                Logger.getLogger(FacturaJDialog.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        } else {
-            JOptionPane.showMessageDialog(null, "Debe proporcionar un código de factura válido.");
-        }*/
     }//GEN-LAST:event_jbCrearFacturaActionPerformed
 
     private void jbModificarFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbModificarFacturaActionPerformed
@@ -477,34 +454,6 @@ public class FacturaJDialog extends javax.swing.JDialog {
         //Si "error" está vacío, es que todo ha ido bien, así que actualizo las tablas de la vista
         actualizarTablas();
 
-        /*  
-        if (!jtfNumeroFactura.getText().isEmpty()) {
-            try {
-                Facturas factura = new Facturas(
-                        BigDecimal.valueOf(Long.valueOf(jtfNumeroFactura.getText())),
-                        (Clientes) crud.read(Clientes.class, jtfCodigoCliente.getText()),
-                        new SimpleDateFormat("dd-MM-yyyy").parse(jtfFechaFactura.getText()),
-                        facturaEnFoco.getArticuloses()
-                );
-                if (listaFacturas.contains(factura)) {
-                    crud.update(factura);
-                } else {
-                    int opcion = JOptionPane.showOptionDialog(null, "No existe una factura con ese código de factura."
-                            + " ¿Desea crearla?", "Crear", JOptionPane.YES_NO_CANCEL_OPTION,
-                            JOptionPane.QUESTION_MESSAGE, null, null, null);
-                    if (opcion == 0) {
-                        factura.setArticuloses(new HashSet(0));
-                        crud.create(factura);
-                    }
-                }
-                actualizarTablas();
-                actualizarTablaLineaFacturas();
-            } catch (ParseException ex) {
-                Logger.getLogger(FacturaJDialog.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        } else {
-            JOptionPane.showMessageDialog(null, "Debe seleccione o escriba un código de factura para iniciar la modificación.");
-        }*/
     }//GEN-LAST:event_jbModificarFacturaActionPerformed
 
     private void jbBorrarFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbBorrarFacturaActionPerformed
@@ -560,7 +509,8 @@ public class FacturaJDialog extends javax.swing.JDialog {
         }
         //Añado el artículo a la factura, usando el méotodo 'add' personalizado, que también añade la factura al artículo.
         factura.addArticulo(articulo);
-        //actualizo el master(artículo)
+
+        //Actualizo el master(artículo)
         String error = crud.update(articulo);
         //Si "error" no está vacío, es que ha ocurrido un error al borrar (probablemente la familia no exista)
         if (!error.isEmpty()) {
