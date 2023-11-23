@@ -8,15 +8,13 @@ import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
-import modelos.Cliente;
-
+import modelos.Clientes;
 
 public class ClienteJDialog extends javax.swing.JDialog {
 
     private Crud crud;
-
     private DefaultTableModel dtmCliente;
-    private List<Cliente> listaClientes;
+    private List<Clientes> listaClientes;
 
     public ClienteJDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -48,13 +46,15 @@ public class ClienteJDialog extends javax.swing.JDialog {
         jtfDomicilio.setText((String) jtCliente.getValueAt(rowSeleccionada, 2));
     }
 
-
     private void actualizarTabla() {
         listaClientes = crud.readAllHQL("from Cliente c");
         Herramientas.limpiarTabla(dtmCliente);
-        for (Cliente c : this.listaClientes) {
-            dtmCliente.addRow(new Object[]{c.getCodCliente(), c.getNomCliente(), c.getDomicilioCli(), c.getListaFacturas().size()});
+        for (Clientes c : this.listaClientes) {
+            dtmCliente.addRow(new Object[]{c.getCodcliente(), c.getNomcliente(), c.getDomiciliocli()});
         }
+        jtfCodigo.setText("");
+        jtfNombre.setText("");
+        jtfDomicilio.setText("");
     }
 
     @SuppressWarnings("unchecked")
@@ -116,11 +116,11 @@ public class ClienteJDialog extends javax.swing.JDialog {
 
             },
             new String [] {
-                "Código", "Nombre", "Domicilio", "Facturas asociadas"
+                "Código", "Nombre", "Domicilio"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -197,7 +197,7 @@ public class ClienteJDialog extends javax.swing.JDialog {
 
     private void jbCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbCrearActionPerformed
         if (!jtfCodigo.getText().isEmpty()) {
-            Cliente clientes = new Cliente(jtfCodigo.getText(), jtfNombre.getText(), jtfDomicilio.getText(), null);
+            Clientes clientes = new Clientes(jtfCodigo.getText(), jtfNombre.getText(), jtfDomicilio.getText(), new HashSet(0));
             String error = crud.create(clientes);
             if (!error.isEmpty()) {
                 JOptionPane.showMessageDialog(null, "No se pudo crear el cliente."
@@ -206,32 +206,42 @@ public class ClienteJDialog extends javax.swing.JDialog {
                 actualizarTabla();
             }
         } else {
-            JOptionPane.showMessageDialog(null, "Debe proporcionar un código de cliente válido.");
+            JOptionPane.showMessageDialog(null, "Debe proporcionar un código de cliente.");
         }
     }//GEN-LAST:event_jbCrearActionPerformed
 
     private void jbModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbModificarActionPerformed
         if (!jtfCodigo.getText().isEmpty()) {
-            Cliente clientes = new Cliente(jtfCodigo.getText(), jtfNombre.getText(), jtfDomicilio.getText());
+            Clientes clientes = new Clientes(jtfCodigo.getText());
             if (listaClientes.contains(clientes)) {
-                crud.update(clientes);
-            } else {
-                int opcion = JOptionPane.showOptionDialog(null, "No existe un cliente con ese código de cliente."
-                        + " ¿Desea crearlo?", "Crear", JOptionPane.YES_NO_CANCEL_OPTION,
-                        JOptionPane.QUESTION_MESSAGE, null, null, null);
-                if (opcion == 0) {
-                    clientes.setListaFacturas(new HashSet(0));
-                    crud.create(clientes);
+                clientes.setNomcliente(jtfNombre.getText());
+                clientes.setDomiciliocli(jtfDomicilio.getText());
+                String error = crud.update(clientes);
+                if (!error.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "No se pudo actualizar el cliente."
+                            + "\nDescripción del error: " + error);
+                } else {
+                    actualizarTabla();
                 }
             }
-            actualizarTabla();
         } else {
-            JOptionPane.showMessageDialog(null, "Seleccione o escriba un código de cliente para iniciar la modificación.");
+            JOptionPane.showMessageDialog(null, "Debe proporcionar un código de cliente.");
         }
     }//GEN-LAST:event_jbModificarActionPerformed
 
     private void jbBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbBorrarActionPerformed
-        // TODO add your handling code here:
+        if (!jtfCodigo.getText().isEmpty()) {
+            Clientes clientes = new Clientes(jtfCodigo.getText());
+            String error = crud.delete(clientes);
+            if (!error.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "No se pudo borrar el cliente."
+                        + "\nDescripción del error: " + error);
+            } else {
+                actualizarTabla();
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Debe proporcionar un código de cliente.");
+        }
     }//GEN-LAST:event_jbBorrarActionPerformed
 
     /**

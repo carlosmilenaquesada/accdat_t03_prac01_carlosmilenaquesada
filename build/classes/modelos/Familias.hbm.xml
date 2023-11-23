@@ -1,24 +1,25 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 18-nov-2023 1:53:26 by Hibernate Tools 4.3.1 -->
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 22-nov-2023 1:11:13 by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
-  <class name="modelos.Familia" optimistic-lock="version" schema="ACCDAT_T03_PRAC01" table="FAMILIAS">
-    <id name="codFamilia" type="string">
-      <column length="20" name="CODFAMILIA"/>
-      <generator class="assigned"/>
-    </id>
-    <property name="nomFamilia" type="string">
-      <column length="100" name="NOMFAMILIA"/>
-    </property>
-    <property name="descFamilia" type="string">
-      <column length="100" name="DESCFAMILIA"/>
-    </property>
-    <!--<set name="articuloses" table="ARTICULOS" inverse="true" lazy="true" fetch="select">-->
-    <set fetch="select" inverse="true" lazy="false" name="listaArticulos" table="ARTICULOS">
-      <key>
-        <column length="20" name="CODFAMILIA"/>
-      </key>
-      <one-to-many class="modelos.Articulo"/>
-    </set>
-  </class>
+    <class name="modelos.Familias" table="FAMILIAS" schema="ACCDAT_T03_PRAC01" optimistic-lock="version">
+        <id name="codfamilia" type="string">
+            <column name="CODFAMILIA" length="20" />
+            <generator class="assigned" />
+        </id>
+        <property name="nomfamilia" type="string">
+            <column name="NOMFAMILIA" length="100" />
+        </property>
+        <property name="descfamilia" type="string">
+            <column name="DESCFAMILIA" length="100" />
+        </property>
+        <!--<set name="articuloses" table="ARTICULOS" inverse="true" lazy="true" fetch="select">-->
+        <set name="articuloses" table="ARTICULOS" inverse="false" lazy="false" cascade="all" fetch="join">
+            <key>
+                <column name="CODFAMILIA" length="20" />
+            </key>
+            <one-to-many class="modelos.Articulos" />
+        </set>
+    </class>
 </hibernate-mapping>

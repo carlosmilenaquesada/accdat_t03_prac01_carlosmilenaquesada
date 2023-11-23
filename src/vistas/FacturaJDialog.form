@@ -174,7 +174,7 @@
         </Component>
         <Component class="javax.swing.JButton" name="jbCrearFactura">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Crear familia"/>
+            <Property name="text" type="java.lang.String" value="Crear factura"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbCrearFacturaActionPerformed"/>
@@ -182,7 +182,7 @@
         </Component>
         <Component class="javax.swing.JButton" name="jbModificarFactura">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Modificar familia"/>
+            <Property name="text" type="java.lang.String" value="Modificar factura"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbModificarFacturaActionPerformed"/>
@@ -190,7 +190,7 @@
         </Component>
         <Component class="javax.swing.JButton" name="jbBorrarFactura">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Eliminar familia"/>
+            <Property name="text" type="java.lang.String" value="Eliminar factura"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbBorrarFacturaActionPerformed"/>
@@ -214,20 +214,14 @@
             <Component class="javax.swing.JTable" name="jtFactura">
               <Properties>
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                  <Table columnCount="4" rowCount="0">
+                  <Table columnCount="3" rowCount="0">
                     <Column editable="false" title="N&#xfa;mero factura" type="java.lang.Object"/>
                     <Column editable="false" title="C&#xf3;digo cliente" type="java.lang.Object"/>
                     <Column editable="false" title="Fecha factura" type="java.lang.Object"/>
-                    <Column editable="false" title="L&#xed;neas de factura" type="java.lang.Object"/>
                   </Table>
                 </Property>
                 <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
                   <TableColumnModel selectionModel="1">
-                    <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                      <Title/>
-                      <Editor/>
-                      <Renderer/>
-                    </Column>
                     <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
                       <Title/>
                       <Editor/>
@@ -280,7 +274,7 @@
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="jtfNumeroFacturaLinea" alignment="0" max="32767" attributes="0"/>
-                              <Component id="jtfCodigoArticulo" alignment="0" max="32767" attributes="0"/>
+                              <Component id="jtfCodigoArticuloLinea" alignment="0" max="32767" attributes="0"/>
                               <Group type="102" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="jLabel5" min="-2" pref="110" max="-2" attributes="0"/>
@@ -293,8 +287,6 @@
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="jbCrearLineaFactura" min="-2" pref="120" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jbModificarLineaFactura" min="-2" pref="120" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="jbBorrarLineaFactura" min="-2" pref="120" max="-2" attributes="0"/>
                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
@@ -309,7 +301,6 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jbCrearLineaFactura" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
-                      <Component id="jbModificarLineaFactura" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
                       <Component id="jbBorrarLineaFactura" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
@@ -321,7 +312,7 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="jLabel5" min="-2" pref="30" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jtfCodigoArticulo" min="-2" pref="30" max="-2" attributes="0"/>
+                          <Component id="jtfCodigoArticuloLinea" min="-2" pref="30" max="-2" attributes="0"/>
                       </Group>
                       <Component id="jspLineaFactura" min="-2" pref="234" max="-2" attributes="0"/>
                   </Group>
@@ -343,27 +334,19 @@
             <Property name="text" type="java.lang.String" value="C&#xf3;digo art&#xed;culo"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="jtfCodigoArticulo">
+        <Component class="javax.swing.JTextField" name="jtfCodigoArticuloLinea">
         </Component>
         <Component class="javax.swing.JButton" name="jbCrearLineaFactura">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Crear art&#xed;culo"/>
+            <Property name="text" type="java.lang.String" value="Crear l&#xed;nea"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbCrearLineaFacturaActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="jbModificarLineaFactura">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Modificar art&#xed;culo"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbModificarLineaFacturaActionPerformed"/>
-          </Events>
-        </Component>
         <Component class="javax.swing.JButton" name="jbBorrarLineaFactura">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Eliminar art&#xed;culo"/>
+            <Property name="text" type="java.lang.String" value="Eliminar l&#xed;nea"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbBorrarLineaFacturaActionPerformed"/>

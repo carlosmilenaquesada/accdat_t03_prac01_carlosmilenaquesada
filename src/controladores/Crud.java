@@ -8,9 +8,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.criterion.Projection;
 import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
 
 public class Crud {
 
@@ -66,10 +64,11 @@ SessionFactory sf = NewHibernateUtil.getSessionFactory();
         }
     }
 
+    //Update, create, delete----------------------------------------------------
     /**
      * CREATE
      */
-    public String create(Serializable s) {
+    public String create(Serializable s) {//OK
         String error = "";
         try {
             iniciarOperacion();
@@ -85,92 +84,21 @@ SessionFactory sf = NewHibernateUtil.getSessionFactory();
     }
 
     /**
-     * CREATE O UPDATE
-     */
-    public void createOUpdate(Serializable s) {
-        try {
-            iniciarOperacion();
-            ss.saveOrUpdate(s);
-            tx.commit();
-        } catch (HibernateException e) {
-            tx.rollback();
-        } finally {
-            cerrarOperacion();
-        }
-    }
-
-    /**
-     * READ
-     */
-    public Object read(Class c, Serializable pk) {
-        Object o = null;
-        try {
-            ss = sf.openSession();
-            o = ss.get(c, pk);
-        } catch (HibernateException e) {
-
-        } finally {
-            cerrarOperacion();
-        }
-        return o;
-    }
-
-    /**
-     * READALL usando HQL Query
-     */
-    public List readAllHQL(String from) {
-        List lista = null;//comporbar si devuelve null o vacío en caso de qeu no haya registros
-        try {
-            ss = sf.openSession();
-            q = ss.createQuery(from);
-            lista = q.list();
-        } catch (HibernateException e) {
-
-        } finally {
-            cerrarOperacion();
-        }
-        return lista;
-    }
-
-    /**
-     * READ Max() de un campo de una clase usando Criteria
-     */
-    public Object readMaxValueCRITERIA(Class clase, String campo) {
-        ss = sf.openSession();
-        c = ss.createCriteria(clase).setProjection(Projections.max(campo));
-        return c.uniqueResult();
-    }
-
-    /**
-     * READALL usando Criteria
-     */
-    public List readAllCRITERIA(Class clase) {
-        List lista = null;//comporbar si devuelve null o vacío en caso de qeu no haya registros
-        try {
-            ss = sf.openSession();
-            c = ss.createCriteria(clase);
-            lista = c.list();
-        } catch (HibernateException e) {
-
-        } finally {
-            cerrarOperacion();
-        }
-        return lista;
-    }
-
-    /**
      * UPDATE
      */
-    public void update(Serializable s) {
+    public String update(Serializable s) {
+        String error = "";
         try {
             iniciarOperacion();
             ss.update(s);
             tx.commit();
         } catch (HibernateException e) {
+            error = e.getCause().getMessage();
             tx.rollback();
         } finally {
             cerrarOperacion();
         }
+        return error;
     }
 
     /**
@@ -191,4 +119,69 @@ SessionFactory sf = NewHibernateUtil.getSessionFactory();
         return error;
     }
 
+    //Lecturas -----------------------------------------------------------------
+    /**
+     * READ
+     */
+    public Object read(Class c, Serializable pk) {
+        Object o;
+        try {
+            ss = sf.openSession();
+            o = ss.get(c, pk);
+        } catch (HibernateException e) {
+            o = null;
+        } finally {
+            cerrarOperacion();
+        }
+        return o;
+    }
+
+    /**
+     * READALL usando HQL Query
+     */
+    public List readAllHQL(String from) {
+        List lista;//comporbar si devuelve null o vacío en caso de qeu no haya registros
+        try {
+            ss = sf.openSession();
+            q = ss.createQuery(from);
+            lista = q.list();
+        } catch (HibernateException e) {
+            lista = null;
+        } finally {
+            cerrarOperacion();
+        }
+        return lista;
+    }
+
+    /**
+     * READ Max() de un campo de una clase usando Criteria
+     */
+    public Object readMaxValueCRITERIA(Class clase, String campo) {
+        Object o;
+        try {
+            ss = sf.openSession();
+            c = ss.createCriteria(clase).setProjection(Projections.max(campo));
+            o = c.uniqueResult();
+        } catch (HibernateException e) {
+            o = null;
+        }
+        return o;
+    }
+
+    /**
+     * READALL usando Criteria
+     */
+    public List readAllCRITERIA(Class clase) {
+        List lista;//comporbar si devuelve null o vacío en caso de qeu no haya registros
+        try {
+            ss = sf.openSession();
+            c = ss.createCriteria(clase);
+            lista = c.list();
+        } catch (HibernateException e) {
+            lista = null;
+        } finally {
+            cerrarOperacion();
+        }
+        return lista;
+    }
 }

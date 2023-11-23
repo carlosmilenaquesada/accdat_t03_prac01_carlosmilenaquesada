@@ -1,26 +1,28 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 18-nov-2023 1:53:26 by Hibernate Tools 4.3.1 -->
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 22-nov-2023 1:11:13 by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
-  <class name="modelos.Factura" optimistic-lock="version" schema="ACCDAT_T03_PRAC01" table="FACTURAS">
-    <id name="numFactura" type="big_decimal">
-      <column name="NUMFACTURA" precision="20" scale="0"/>
-      <generator class="assigned"/>
-    </id>
-    <many-to-one class="modelos.Cliente" fetch="select" name="cliente">
-      <column length="20" name="CODCLIENTE"/>
-    </many-to-one>
-    <property name="fechaFactura" type="date">
-      <column length="7" name="FECHAFACTURA"/>
-    </property>
-    <!--<set name="articuloses" table="FACT_ART" inverse="false" lazy="true" fetch="select">-->
-    <set fetch="select" inverse="false" lazy="false" name="listaArticulos" table="FACT_ART">
-      <key>
-        <column name="NUMFACTURA" not-null="true" precision="20" scale="0"/>
-      </key>
-      <many-to-many entity-name="modelos.Articulo">
-        <column length="20" name="CODARTICULO" not-null="true"/>
-      </many-to-many>
-    </set>
-  </class>
+    <class name="modelos.Facturas" table="FACTURAS" schema="ACCDAT_T03_PRAC01" optimistic-lock="version">
+        <id name="numfactura" type="big_decimal">
+            <column name="NUMFACTURA" precision="20" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="clientes" class="modelos.Clientes" fetch="select">
+            <column name="CODCLIENTE" length="20" />
+        </many-to-one>
+        <property name="fechafactura" type="date">
+            <column name="FECHAFACTURA" length="7" />
+        </property>
+        <!--ESCLAVO
+        <set name="articuloses" table="FACT_ART" inverse="false" lazy="true" fetch="select">-->
+        <set name="articuloses" table="FACT_ART" inverse="false" lazy="false" fetch="join" cascade="all">       
+            <key>
+                <column name="NUMFACTURA" precision="20" scale="0" not-null="true" />
+            </key>
+            <many-to-many entity-name="modelos.Articulos">
+                <column name="CODARTICULO" length="20" not-null="true" />
+            </many-to-many>
+        </set>
+    </class>
 </hibernate-mapping>

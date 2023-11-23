@@ -6,30 +6,32 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import javax.swing.table.DefaultTableModel;
-import modelos.Articulo;
-import modelos.Familia;
+import modelos.Articulos;
+import modelos.Familias;
 
 public class FamiliaJDialog extends javax.swing.JDialog {
 
     private Crud crud;
 
     private DefaultTableModel dtmFamilia;
-    private List<Familia> listaFamilias;
-    private Familia familiaEnFoco;
+    private List<Familias> listaFamilias;
+    private Familias familiaEnFoco;
 
     private DefaultTableModel dtmArticulo;
 
     public FamiliaJDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         this.crud = new Crud();
-        this.listaFamilias = crud.readAllHQL("from Familia f");
         initComponents();
         initConfiguracion();
     }
@@ -42,7 +44,7 @@ public class FamiliaJDialog extends javax.swing.JDialog {
         this.jtFamilia.setRowSelectionAllowed(true);
         this.jtArticulo.setRowSelectionAllowed(true);
         this.familiaEnFoco = null;
-        actualizarTablaFamilias();
+        actualizarTablas();
         this.jtFamilia.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
@@ -62,7 +64,6 @@ public class FamiliaJDialog extends javax.swing.JDialog {
                 }
             }
         });
-
     }
 
     private void actualizarInputsFamilias() {
@@ -72,34 +73,38 @@ public class FamiliaJDialog extends javax.swing.JDialog {
     }
 
     private void actualizarInputsArticulos() {
-        jtfCodigoArticulo.setText((String) jtArticulo.getValueAt(jtArticulo.getSelectedRow(), 0));
-        jtfNombreArticulo.setText((String) jtArticulo.getValueAt(jtArticulo.getSelectedRow(), 1));
-        jtfPrecioArticulo.setText(jtArticulo.getValueAt(jtArticulo.getSelectedRow(), 2).toString());
+        jtfFamiliaArticulo.setText((String) jtArticulo.getValueAt(jtArticulo.getSelectedRow(), 0));
+        jtfCodigoArticulo.setText((String) jtArticulo.getValueAt(jtArticulo.getSelectedRow(), 1));
+        jtfNombreArticulo.setText((String) jtArticulo.getValueAt(jtArticulo.getSelectedRow(), 2));
+        jtfPrecioArticulo.setText(jtArticulo.getValueAt(jtArticulo.getSelectedRow(), 3).toString());
     }
 
-    private void actualizarTablaFamilias() {
+    private void actualizarTablas() {
         Herramientas.limpiarTabla(dtmFamilia);
-        for (Familia f : this.listaFamilias) {
-            dtmFamilia.addRow(new Object[]{f.getCodFamilia(), f.getNomFamilia(), f.getDescFamilia(), f.getListaArticulos().size()});
+        this.listaFamilias = crud.readAllHQL("from Familias f");
+        for (Familias f : this.listaFamilias) {
+            dtmFamilia.addRow(new Object[]{f.getCodfamilia(), f.getNomfamilia(), f.getDescfamilia()});
         }
+        familiaEnFoco = null;
         jtfCodigoFamilia.setText("");
         jtfNombreFamilia.setText("");
         jtfDescripcionFamilia.setText("");
-        familiaEnFoco = null;
+        actualizarTablaArticulos();
     }
 
     private void actualizarTablaArticulos() {
         Herramientas.limpiarTabla(dtmArticulo);
         if (familiaEnFoco != null) {
-            for (Articulo a : (Set<Articulo>) familiaEnFoco.getListaArticulos()) {
+            for (Articulos a : (Set<Articulos>) familiaEnFoco.getArticuloses()) {
                 dtmArticulo.addRow(
-                        new Object[]{a.getCodArticulo(),
-                            a.getNomArticulo(),
-                            a.getPrecioArticulo(),
-                            a.getListaFacturas().size()}
+                        new Object[]{a.getFamilias().getCodfamilia(),
+                            a.getCodarticulo(),
+                            a.getNomarticulo(),
+                            a.getPrecioarticulo()}
                 );
             }
         }
+        jtfFamiliaArticulo.setText("");
         jtfCodigoArticulo.setText("");
         jtfNombreArticulo.setText("");
         jtfPrecioArticulo.setText("");
@@ -123,11 +128,13 @@ public class FamiliaJDialog extends javax.swing.JDialog {
         jspFamilia = new javax.swing.JScrollPane();
         jtFamilia = new javax.swing.JTable();
         jpArticulo = new javax.swing.JPanel();
+        jLabel6 = new javax.swing.JLabel();
+        jtfFamiliaArticulo = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jtfCodigoArticulo = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         jtfNombreArticulo = new javax.swing.JTextField();
-        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
         jtfPrecioArticulo = new javax.swing.JTextField();
         jbCrearArticulo = new javax.swing.JButton();
         jbModificarArticulo = new javax.swing.JButton();
@@ -182,11 +189,11 @@ public class FamiliaJDialog extends javax.swing.JDialog {
 
             },
             new String [] {
-                "Código", "Nombre", "Descripción", "Artículos asociados"
+                "Código", "Nombre", "Descripción"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -259,11 +266,13 @@ public class FamiliaJDialog extends javax.swing.JDialog {
 
         jpArticulo.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Articulos de la familia", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 14))); // NOI18N
 
+        jLabel6.setText("Familia");
+
         jLabel4.setText("Código");
 
         jLabel5.setText("Nombre");
 
-        jLabel6.setText("Precio");
+        jLabel7.setText("Precio");
 
         jbCrearArticulo.setText("Crear artículo");
         jbCrearArticulo.addActionListener(new java.awt.event.ActionListener() {
@@ -291,7 +300,7 @@ public class FamiliaJDialog extends javax.swing.JDialog {
 
             },
             new String [] {
-                "Código", "Nombre", "Precio", "Facturas asociadas"
+                "Familia", "Código", "Nombre", "Precio"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -305,6 +314,7 @@ public class FamiliaJDialog extends javax.swing.JDialog {
         jtArticulo.setColumnSelectionAllowed(true);
         jtArticulo.getTableHeader().setReorderingAllowed(false);
         jspArticulo.setViewportView(jtArticulo);
+        jtArticulo.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
 
         javax.swing.GroupLayout jpArticuloLayout = new javax.swing.GroupLayout(jpArticulo);
         jpArticulo.setLayout(jpArticuloLayout);
@@ -313,39 +323,47 @@ public class FamiliaJDialog extends javax.swing.JDialog {
             .addGroup(jpArticuloLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jpArticuloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jpArticuloLayout.createSequentialGroup()
-                        .addComponent(jspArticulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addGroup(jpArticuloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jtfCodigoArticulo)
-                            .addGroup(jpArticuloLayout.createSequentialGroup()
-                                .addGroup(jpArticuloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 52, Short.MAX_VALUE))
-                            .addComponent(jtfNombreArticulo)
-                            .addComponent(jtfPrecioArticulo))
-                        .addContainerGap())
+                    .addComponent(jspArticulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jpArticuloLayout.createSequentialGroup()
                         .addComponent(jbCrearArticulo, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jbModificarArticulo, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jbBorrarArticulo, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                        .addComponent(jbBorrarArticulo, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
+                .addGroup(jpArticuloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jtfCodigoArticulo)
+                    .addComponent(jtfNombreArticulo)
+                    .addComponent(jtfFamiliaArticulo, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)
+                    .addGroup(jpArticuloLayout.createSequentialGroup()
+                        .addGroup(jpArticuloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jtfPrecioArticulo))
+                .addContainerGap())
         );
         jpArticuloLayout.setVerticalGroup(
             jpArticuloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpArticuloLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jpArticuloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jbCrearArticulo, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jbModificarArticulo, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jbBorrarArticulo, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jpArticuloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jpArticuloLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jpArticuloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jbCrearArticulo, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jbModificarArticulo, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jbBorrarArticulo, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpArticuloLayout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                 .addGroup(jpArticuloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jpArticuloLayout.createSequentialGroup()
+                        .addComponent(jtfFamiliaArticulo, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jtfCodigoArticulo, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -353,12 +371,12 @@ public class FamiliaJDialog extends javax.swing.JDialog {
                         .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jtfNombreArticulo, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jtfPrecioArticulo, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jspArticulo, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addContainerGap())
+                .addGap(23, 23, 23))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -378,136 +396,309 @@ public class FamiliaJDialog extends javax.swing.JDialog {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(336, Short.MAX_VALUE)
+                .addContainerGap(340, Short.MAX_VALUE)
                 .addComponent(jpArticulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(23, 23, 23))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addContainerGap()
                     .addComponent(jpFamilia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(336, Short.MAX_VALUE)))
+                    .addContainerGap(400, Short.MAX_VALUE)))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jbCrearFamiliaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbCrearFamiliaActionPerformed
-        if (!jtfCodigoFamilia.getText().isEmpty()) {
-            Familia familia = new Familia(jtfCodigoFamilia.getText(), jtfNombreFamilia.getText(), jtfDescripcionFamilia.getText(), null);
-            String error = crud.create(familia);
-            if (!error.isEmpty()) {
-                JOptionPane.showMessageDialog(null, "No se pudo crear la familia."
-                        + "\nDescripción del error: " + error);
+        //Compruebo que código de familia que pretendo crear no esté vacío
+        if (jtfCodigoFamilia.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Debe proporcionar un código de familia.");
+            return;
+        }
+        //Creo la familia nueva con todos sus campos. En este momento, al ser familia nueva, no tiene ningún artículo.
+        Familias familia = new Familias(jtfCodigoFamilia.getText(), jtfNombreFamilia.getText(), jtfDescripcionFamilia.getText(), new HashSet(0));
+        //Compruebo que no existiera previamente esa familia.
+        if (listaFamilias.contains(familia)) {
+            JOptionPane.showMessageDialog(null, "No se puede crear la familia porque ya existe una familia con ese código.");
+            return;
+        }
+        //Inicio la creación
+        String error = crud.create(familia);
+        //Si "error" no está vacío, es que ha ocurrido un error al crear.
+        if (!error.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "No se pudo crear la familia." + "\nDescripción del error: " + error);
+            return;
+        }
+        //Si "error" está vacío, es que todo ha ido bien, así que actualizo las tablas de la vista
+        actualizarTablas();
+
+
+        /*if (!jtfCodigoFamilia.getText().isEmpty()) {
+            Familias familia = new Familias(jtfCodigoFamilia.getText());
+            if (listaFamilias.contains(familia)) {
+                JOptionPane.showMessageDialog(null, "No se puede crear la familia porque ya existe una familia con ese código.");
             } else {
-                actualizarTablaFamilias();
-                actualizarTablaArticulos();
+                familia.setNomfamilia(jtfNombreFamilia.getText());
+                familia.setDescfamilia(jtfDescripcionFamilia.getText());
+                familia.setArticuloses(new HashSet(0));
+                String error = crud.create(familia);
+                if (!error.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "No se pudo crear la familia."
+                            + "\nDescripción del error: " + error);
+                } else {
+                    actualizarTablas();
+                }
             }
         } else {
-            JOptionPane.showMessageDialog(null, "Debe proporcionar un código de familia válido.");
-        }
+            JOptionPane.showMessageDialog(null, "Debe proporcionar un código de familia.");
+        }*/
     }//GEN-LAST:event_jbCrearFamiliaActionPerformed
 
     private void jbModificarFamiliaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbModificarFamiliaActionPerformed
-        if (!jtfCodigoFamilia.getText().isEmpty()) {
-            Familia familias = new Familia(jtfCodigoFamilia.getText(), jtfNombreFamilia.getText(), jtfDescripcionFamilia.getText());
-            if (listaFamilias.contains(familias)) {
-                crud.update(familias);
-            } else {
-                int opcion = JOptionPane.showOptionDialog(null, "No existe una familia con ese código de familia."
-                        + " ¿Desea crearla?", "Crear", JOptionPane.YES_NO_CANCEL_OPTION,
-                        JOptionPane.QUESTION_MESSAGE, null, null, null);
-                if (opcion == 0) {
-                    familias.setListaArticulos(new HashSet(0));
-                    crud.create(familias);
-                }
-            }
-            actualizarTablaFamilias();
-            actualizarTablaArticulos();
-        } else {
-            JOptionPane.showMessageDialog(null, "Debe seleccione o escriba un código de familia para iniciar la modificación.");
+        //Compruebo que código de familia que pretendo modificar no esté vacío
+        if (jtfCodigoFamilia.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Debe proporcionar un código de familia.");
+            return;
         }
+        //Compruebo que el código de familia proporcionado corresponda a una familia que ya exista
+        int indexFamilia = listaFamilias.indexOf(new Familias(jtfFamiliaArticulo.getText()));
+        if (indexFamilia == -1) {
+            JOptionPane.showMessageDialog(null, "La familia proporcionada no existe.");
+            return;
+        }
+        ///Si la familia existe, la tomo en una variable de tránsito para trabajar más comodamente
+        Familias familia = listaFamilias.get(indexFamilia);
+
+        //Le modifico los campos oportunos (excepto la colección de artículos 'articuloses', eso no cambiará)
+        familia.setNomfamilia(jtfNombreFamilia.getText());
+        familia.setDescfamilia(jtfDescripcionFamilia.getText());
+        //Actualizo la familia
+        String error = crud.update(familia);
+        //Si "error" no está vacío, es que ha ocurrido un error al modificar.
+        if (!error.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "No se pudo modificar la familia." + "\nDescripción del error: " + error);
+            return;
+        }
+        //Si "error" está vacío, es que todo ha ido bien, así que actualizo las tablas de la vista
+        actualizarTablas();
+
+
+        /*if (!jtfCodigoFamilia.getText().isEmpty()) {
+            Familias familia = new Familias(jtfCodigoFamilia.getText());
+            if (listaFamilias.contains(familia)) {
+                familia.setNomfamilia(jtfNombreFamilia.getText());
+                familia.setDescfamilia(jtfDescripcionFamilia.getText());
+                String error = crud.update(familia);
+                if (!error.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "No se pudo actualizar la familia."
+                            + "\nDescripción del error: " + error);
+                } else {
+                    actualizarTablas();
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "No existe un artículo en la lista con el código proporcionado.");
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Debe proporcionar un código de artículo.");
+        }*/
     }//GEN-LAST:event_jbModificarFamiliaActionPerformed
 
     private void jbBorrarFamiliaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbBorrarFamiliaActionPerformed
-        if (!jtfCodigoFamilia.getText().isEmpty()) {
-            crud.delete(new Familia(jtfCodigoFamilia.getText()));
-            actualizarTablaFamilias();
-            actualizarTablaArticulos();
+        //Intento borrar la familia con el código proporcionado
+        String error = crud.delete(new Familias(jtfCodigoFamilia.getText()));
+        //Si "error" no está vacío, es que ha ocurrido un error al borrar (probablemente la familia no exista)
+        if (!error.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "No se pudo borrar la familia." + "\nDescripción del error: " + error);
+            return;
         }
+        //Si "error" está vacío, es que todo ha ido bien, así que actualizo las tablas de la vista
+        actualizarTablas();
+        /*if (!jtfCodigoFamilia.getText().isEmpty()) {
+            Familias familia = new Familias(jtfCodigoFamilia.getText());
+            String error = crud.delete(familia);
+            if (!error.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "No se pudo borrar la familia."
+                        + "\nDescripción del error: " + error);
+            } else {
+                actualizarTablas();
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Debe proporcionar un código de familia.");
+        }*/
+
     }//GEN-LAST:event_jbBorrarFamiliaActionPerformed
 
     private void jbActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbActualizarActionPerformed
-        actualizarTablaFamilias();
-        actualizarTablaArticulos();
+        actualizarTablas();
+
     }//GEN-LAST:event_jbActualizarActionPerformed
 
     private void jbCrearArticuloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbCrearArticuloActionPerformed
-        if (!jtfCodigoArticulo.getText().isEmpty()) {
-            Articulo articulos = null;
-            try {
-                articulos = new Articulo(
-                        jtfCodigoArticulo.getText(),
-                        familiaEnFoco,
-                        jtfNombreArticulo.getText(),
-                        BigDecimal.valueOf((double) new DecimalFormat("0.00").parse(jtfPrecioArticulo.getText())),
-                        null
-                );
-            } catch (ParseException ex) {
-                JOptionPane.showMessageDialog(null, "El precio proporcionado no es válido.");
-            }
-            if (articulos != null) {
-                String error = "";
-                error = crud.create(articulos);
-                if (!error.isEmpty()) {
-                    JOptionPane.showMessageDialog(null, "No se pudo crear el artículo."
-                            + "\nDescripción del error: " + error);
-                } else {
-                    actualizarTablaFamilias();
-                    actualizarTablaArticulos();
+        //Compruebo que el campo de código no esté vacío el código del artículo que pretendo modificar
+        if (jtfCodigoArticulo.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Debe proporcionar un código de cliente.");
+            return;
+        }
+
+        //Compruebo que el código de familia proporcionado para el nuevo producto corresponda con una familia que ya exista
+        int indexFamilia = listaFamilias.indexOf(new Familias(jtfFamiliaArticulo.getText()));
+        if (indexFamilia == -1) {
+            JOptionPane.showMessageDialog(null, "La familia proporcionada no existe.");
+            return;
+        }
+        ///Si la familia existe, la tomo en una variable de tránsito para trabajar más comodamente
+        Familias familia = listaFamilias.get(indexFamilia);
+        //Creo el artículo nuevo con todos sus campos. En este momento, al ser artículo nuevo, no tiene ninguna factura.
+        Articulos articulo;
+        try {
+            articulo = new Articulos(jtfCodigoArticulo.getText(), familia, jtfNombreArticulo.getText(), BigDecimal.valueOf(new DecimalFormat("0.00").parse(jtfPrecioArticulo.getText()).doubleValue()), new HashSet(0));
+        } catch (ParseException ex) {
+            JOptionPane.showMessageDialog(null, "El precio proporcionado no tiene un formato válido.");
+            return;
+        }
+        //Añado el nuevo artículo a la colección de artículos de la familia, y la actualizo (por bidireccionalidad, también podría haber guardado con save el artículo directamente y obtendría el mismo resultado)
+        familia.getArticuloses().add(articulo);
+        String error = crud.update(listaFamilias.get(indexFamilia));
+        //Si "error" no está vacío, es que ha ocurrido un error al crear (probablemente el artículo ya exista)
+        if (!error.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "No se pudo crear el artículo." + "\nDescripción del error: " + error);
+            return;
+        }
+        //Si "error" está vacío, es que todo ha ido bien, así que actualizo las tablas de la vista
+        actualizarTablas();
+
+        /*if (!jtfCodigoArticulo.getText().isEmpty()) {
+            Articulos articulo = (Articulos) crud.read(Articulos.class, jtfCodigoArticulo.getText());
+            if (articulo != null) {
+                JOptionPane.showMessageDialog(null, "No se puede crear el artículo porque ya existe un artículo con ese código.");
+            } else {
+                try {
+                    Familias f = (Familias) crud.read(Familias.class, jtfFamiliaArticulo.getText());
+                    if (f != null) {
+                        articulo = new Articulos(jtfCodigoArticulo.getText(), f, jtfNombreArticulo.getText(), BigDecimal.valueOf(new DecimalFormat("0.00").parse(jtfPrecioArticulo.getText()).doubleValue()), new HashSet(0));
+                        f.getArticuloses().add(articulo);
+                        String error = crud.update(f);
+                        if (!error.isEmpty()) {
+                            JOptionPane.showMessageDialog(null, "No se pudo crear el artículo."
+                                    + "\nDescripción del error: " + error);
+                        } else {
+                            actualizarTablas();
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "La familia proporcionada no es válida.");
+                    }
+
+                } catch (ParseException ex) {
+                    JOptionPane.showMessageDialog(null, "El precio proporcionado no es válido.");
                 }
             }
-        }
+        } else {
+            JOptionPane.showMessageDialog(null, "Debe proporcionar un código de cliente.");
+        }*/
     }//GEN-LAST:event_jbCrearArticuloActionPerformed
 
     private void jbModificarArticuloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbModificarArticuloActionPerformed
+        //Compruebo que el campo de código del artículo que pretendo modificar no esté vacío
+        if (jtfCodigoArticulo.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Debe proporcionar un código de artículo.");
+            return;
+        }
+        //Creo un artículo auxiliar con ese código, con el que voy a trabajar
+        Articulos articulo = new Articulos(jtfCodigoArticulo.getText());
+        try {
+            //Asigno el nuevo valor de precio
+            articulo.setPrecioarticulo(BigDecimal.valueOf(new DecimalFormat("0.00").parse(jtfPrecioArticulo.getText()).doubleValue()));
+        } catch (ParseException ex) {
+            JOptionPane.showMessageDialog(null, "El precio proporcionado no tiene un formato válido.");
+            return;
+        }
+        //Compruebo que el código de nueva familia proporcionado corresponda con una familia que ya exista
+        int indexFamilia = listaFamilias.indexOf(new Familias(jtfFamiliaArticulo.getText()));
+        if (indexFamilia == -1) {
+            JOptionPane.showMessageDialog(null, "La familia proporcionada no es válida.");
+            return;
+        }
+        //Si la familia existe, se la asigno al nuevo valor de familia del artículo , apoyándome en el index conseguido en el paso anterior
+        articulo.setFamilias(listaFamilias.get(indexFamilia));
+        //Asigno el nuevo nombre al artículo
+        articulo.setNomarticulo(jtfNombreArticulo.getText());
+        //Actualizo el artículo
+        String error = crud.update(articulo);
+        //Si "error" no está vacío, es que ha ocurrido un error al borrar (probablemente el artículo no exista)
+        if (!error.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "No se pudo modificar el artículo." + "\nDescripción del error: " + error);
+            return;
+        }
+        //Si "error" está vacío, es que todo ha ido bien, así que actualizo las tablas de la vista
+        actualizarTablas();
+
+
+        /*
+//Tomo el código del artículo que pretendo modificar
         if (!jtfCodigoArticulo.getText().isEmpty()) {
+            //Creo un artículo auxiliar con ese código
+            Articulos articulo = new Articulos(jtfCodigoArticulo.getText());
             try {
-                Articulo articulo = new Articulo(jtfCodigoArticulo.getText());
-                if (familiaEnFoco.getListaArticulos().contains(articulo)) {
-                    articulo.setFamilia(familiaEnFoco);
-                    articulo.setNomArticulo(jtfNombreArticulo.getText());
-                    articulo.setPrecioArticulo(BigDecimal.valueOf((double) new DecimalFormat("0.00").parse(jtfPrecioArticulo.getText())));
-                    crud.update(articulo);
-                } else {
-                    int opcion = JOptionPane.showOptionDialog(null, "No existe un artículo con ese código de artículo."
-                            + " ¿Desea crearlo?", "Crear", JOptionPane.YES_NO_CANCEL_OPTION,
-                            JOptionPane.QUESTION_MESSAGE, null, null, null);
-                    if (opcion == 0) {
-                        articulo.setListaFacturas(new HashSet(0));
-                        crud.create(articulo);
+                //Asigno el nuevo valor de precio (si el precio proporcionado no cumple, la excepción detiene el proceso)
+                articulo.setPrecioarticulo(BigDecimal.valueOf((Double) new DecimalFormat("0.00").parse(jtfPrecioArticulo.getText())));
+                //Creo una familia auxiliar con el código de familia proporcionado, y compruebo que exista en la lista de familias inicialmente cargada (que contiene todas las familias)
+                Familias familia = new Familias(jtfFamiliaArticulo.getText());
+                int indexFamilia = listaFamilias.indexOf(familia);
+                if (indexFamilia != -1) {
+                    //Si la familia existe, se la asigno al nuevo valor de familia del artículo , apoyándome en el index conseguido en el paso anterior
+                    articulo.setFamilias(listaFamilias.get(indexFamilia));
+                    //Asigno el nuevo nombre al artículo
+                    articulo.setNomarticulo(jtfNombreArticulo.getText());
+                    //Actualizo el artículo
+                    String error = crud.update(articulo);
+                    //Si "error" no está vacío, es que ha ocurrido un error al borrar (probablemente el artículo no exista)
+                    if (!error.isEmpty()) {
+                        JOptionPane.showMessageDialog(null, "No se pudo actualizar el artículo."
+                                + "\nDescripción del error: " + error);
+                    } else {
+                        //Si "error" está vacío, es que todo ha ido bien, así que actualizo las tablas de la vista
+                        actualizarTablas();
                     }
+                } else {
+                    JOptionPane.showMessageDialog(null, "La familia proporcionada no es válida.");
                 }
-                actualizarTablaFamilias();
-                actualizarTablaArticulos();
             } catch (ParseException ex) {
                 JOptionPane.showMessageDialog(null, "El precio proporcionado no es válido.");
             }
+
         } else {
-            JOptionPane.showMessageDialog(null, "Proporcione un código de familia para iniciar la modificación.");
-        }
+            JOptionPane.showMessageDialog(null, "Debe proporcionar un código de artículo.");
+        }*/
     }//GEN-LAST:event_jbModificarArticuloActionPerformed
 
     private void jbBorrarArticuloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbBorrarArticuloActionPerformed
+        //Intento borrar el artículo con el código proporcionado
+        String error = crud.delete(new Articulos(jtfCodigoArticulo.getText()));
+        //Si "error" no está vacío, es que ha ocurrido un error al borrar (probablemente el artículo no exista)
+        if (!error.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "No se pudo borrar el artículo." + "\nDescripción del error: " + error);
+            return;
+        }
+        //Si "error" está vacío, es que todo ha ido bien, así que actualizo las tablas de la vista
+        actualizarTablas();
+
+        /*//Tomo el código del artículo que pretendo borrar
         if (!jtfCodigoArticulo.getText().isEmpty()) {
-            String error = crud.delete(new Articulo(jtfCodigoArticulo.getText()));
+            //Creo un artículo auxiliar con ese código
+            Articulos articulo = new Articulos(jtfCodigoArticulo.getText());
+            
+            String error = crud.delete(articulo);
+           
             if (!error.isEmpty()) {
                 JOptionPane.showMessageDialog(null, "No se pudo borrar el artículo."
                         + "\nDescripción del error: " + error);
             } else {
-                actualizarTablaFamilias();
-                actualizarTablaArticulos();
+                //Si "error" está vacío, es que todo ha ido bien, así que actualizo las tablas de la vista
+                actualizarTablas();
             }
-        }
+        } else {
+            JOptionPane.showMessageDialog(null, "Debe proporcionar un código de artículo para borrar.");
+        }*/
     }//GEN-LAST:event_jbBorrarArticuloActionPerformed
 
     public static void main(String args[]) {
@@ -549,6 +740,7 @@ public class FamiliaJDialog extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JButton jbActualizar;
     private javax.swing.JButton jbBorrarArticulo;
     private javax.swing.JButton jbBorrarFamilia;
@@ -565,6 +757,7 @@ public class FamiliaJDialog extends javax.swing.JDialog {
     private javax.swing.JTextField jtfCodigoArticulo;
     private javax.swing.JTextField jtfCodigoFamilia;
     private javax.swing.JTextField jtfDescripcionFamilia;
+    private javax.swing.JTextField jtfFamiliaArticulo;
     private javax.swing.JTextField jtfNombreArticulo;
     private javax.swing.JTextField jtfNombreFamilia;
     private javax.swing.JTextField jtfPrecioArticulo;
